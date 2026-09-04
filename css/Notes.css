@@ -1,0 +1,9 @@
+:root {
+	font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
