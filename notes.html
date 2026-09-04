@@ -4,25 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notes</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/Notes.css">
-</head>
-<body class="min-h-screen bg-slate-100 text-slate-900">
 
-        <header class="border-b border-slate-200 bg-white">
-        <div class="mx-auto max-w-6xl flex items-center justify-between px-6 py-5">
-        <h1>Student Productivity</h1>
-        <nav aria-label="Main navigation">
-            <a href="workspace.html">Workspace</a>
-            <a href="#tasks">Tasks</a>
-            <a href="Focus.html">Focus</a>
-            <a href="calendar.html">Calendar</a>
-            <a href="notes.html">Notes</a>
-        </nav>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/notes.js" defer></script>
+
+
+    <link rel="stylesheet" href="css/Notes.css">
+
+
+</head>
+<body class="flex h-screen flex-col overflow-hidden bg-slate-100 text-slate-900">
+
+    <header class="shrink-0 border-b border-slate-200 bg-white">
+
+        <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+            <h1 class="text-2xl font-bold tracking-tight">Student Productivity</h1>
+            <nav class="flex flex-wrap gap-4 text-sm font-medium text-slate-600" aria-label="Main navigation">
+                <a class="text-slate-600 hover:text-indigo-600" href="index.html">Workspace</a>
+                <a class="text-slate-600 hover:text-indigo-600" href="#tasks">Tasks</a>
+                <a class="text-slate-600 hover:text-indigo-600" href="Focus.html">Focus</a>
+                <a class="text-slate-600 hover:text-indigo-600" href="calendar.html">Calendar</a>
+                <a class="text-slate-600 hover:text-indigo-600" href="notes.html">Notes</a>
+            </nav>
         </div>
     </header>
-
     
+    <section class="flex min-h-0 flex-1 bg-slate-100">
+        <aside id="notes-sidebar" class="relative h-full w-12 shrink-0 rounded-bl-none rounded-r-[25px] bg-white p-3 text-slate-600 transition-[width] duration-300" aria-label="Notes sidebar">
+            <button id="sidebar-toggle" class="absolute right-2 top-4 flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-lg leading-none text-slate-600 shadow-sm transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" type="button" aria-controls="notes-sidebar" aria-expanded="false" aria-label="Open notes sidebar">
+                <span aria-hidden="true">→</span>
+            </button>
+        </aside>
+
+    </section>
+
     
 </body>
 </html>
