@@ -3,49 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="1XfWcX1oxRPqoX_yrLU5fHXpGQr2AdU7563kB250p4A" />
     <title>Student Productivity</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
 </head>
 <body class="min-h-screen bg-slate-100 text-slate-900">
     <header class="border-b border-slate-200 bg-white">
-        <div class="mx-auto max-w-6xl flex items-center justify-between px-6 py-5">
-        <h1>Student Productivity</h1>
-        <nav aria-label="Main navigation">
-            <a href="workspace.html">Workspace</a>
-            <a href="#tasks">Tasks</a>
-            <a href="Focus.html">Focus</a>
-            <a href="calendar.html">Calendar</a>
-        </nav>
+        <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+            <h1 class="text-2xl font-bold tracking-tight">Student Productivity</h1>
+            <nav class="flex flex-wrap gap-4 text-sm font-medium text-slate-600" aria-label="Main navigation">
+                <a class="text-slate-600 hover:text-indigo-600" href="workspace.html">Workspace</a>
+                <a class="text-slate-600 hover:text-indigo-600" href="#tasks">Tasks</a>
+                <a class="text-slate-600 hover:text-indigo-600" href="Focus.html">Focus</a>
+                <a class="text-slate-600 hover:text-indigo-600" href="calendar.html">Calendar</a>
+            </nav>
         </div>
     </header>
 
-    <main>
-        <section class="hero">
+    <main class="mx-auto max-w-6xl px-6 py-10">
+        <section class="mb-8 rounded-2xl bg-indigo-600 px-6 py-10 text-white shadow-lg">
             <p id="date"></p>
-            <h2>Welcome back!</h2>
-            <p>Ready to tackle your day?</p>
+            <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Student Productivity</h2>
+            <p class="mt-2 text-indigo-100">Plan tasks, protect your focus time, and keep your schoolwork organized.</p>
         </section>
 
-        <div class="grid">
-            <section class="card" id="tasks">
-                <h3>Today’s tasks</h3>
-                <form id="task-form">
-                    <input id="task-input" aria-label="New task" placeholder="Add a task…" required>
-                    <button type="submit">Add</button>
+        <section class="mb-8 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+            <h2 class="text-xl font-semibold">A simple workspace for your day</h2>
+            <p class="mt-3 leading-7 text-slate-600">Student Productivity helps you create daily tasks, track progress, start focused study sessions, and view your schedule in one place. You can use the task and focus tools without signing in.</p>
+            <p class="mt-3 leading-7 text-slate-600">When you choose to connect Google Calendar, we request permission to access your calendar events so the app can display and manage events you authorize. We do not request your Google password, sell your information, or use calendar data for advertising.</p>
+        </section>
+
+        <div class="grid gap-6 lg:grid-cols-3">
+            <section class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 lg:col-span-2" id="tasks">
+                <h3 class="text-xl font-semibold">Today’s tasks</h3>
+                <form id="task-form" class="mt-5 flex flex-col gap-3 sm:flex-row" aria-label="Add a new task">
+                    <input class="flex-1 min-w-0 rounded-lg border px-4 py-3 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" id="task-input" aria-label="New task" placeholder="Add a task…" required>
+                    <button type="submit" class="rounded-lg bg-indigo-600 px-5 py-2.5 font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Add</button>
                 </form>
                 <ul id="task-list"></ul>
             </section>
-            <aside class="card">
-                <h3>Progress</h3>
-                <div class="stat" id="progress">0%</div>
-                <p class="muted" id="progress-text">No tasks yet. Start small.</p>
-                <div class="card focus">
-                    <h3>Ready to focus?</h3>
-                    <a href="Focus.html">Start a study session →</a>
+            <aside class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+                <h3 class="text-xl font-semibold">Progress</h3>
+                <div class="mt-4 text-4xl font-bold text-indigo-600" id="progress">0%</div>
+                <p class="mt-2 text-sm text-slate-500" id="progress-text">No tasks yet. Start small.</p>
+                <div class="mt-8 rounded-xl bg-slate-50 p-5">
+                    <h3 class="font-semibold">Ready to focus?</h3>
+                    <a class="mt-2 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800" href="Focus.html">Start a study session →</a>
                 </div>
             </aside>
         </div>
     </main>
+
+    <footer class="mx-auto max-w-6xl px-6 pb-8 text-sm text-slate-500">
+        <a class="hover:text-indigo-600" href="privacy.html">Privacy Policy</a>
+    </footer>
 
     </body>
 </html>
