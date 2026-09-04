@@ -3,24 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productivity App
-    </title>
+    <title>Student Productivity</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<header>
-    <h1>Productivity App</h1>
-    <nav>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="workspace.html">Workspace</a></li>
-            <li><a href="tasks.html">Tasks</a></li>
-            <li><a href="Focus.html">Focus</a></li>
-            <li><a href="calendar.html">Calendar</a></li>
-        </ul>
-    </nav>
-</header>
-<body>
+<body class="min-h-screen bg-slate-100 text-slate-900">
+    <header class="border-b border-slate-200 bg-white">
+        <div class="mx-auto max-w-6xl flex items-center justify-between px-6 py-5">
+        <h1>Student Productivity</h1>
+        <nav aria-label="Main navigation">
+            <a href="workspace.html">Workspace</a>
+            <a href="#tasks">Tasks</a>
+            <a href="Focus.html">Focus</a>
+            <a href="calendar.html">Calendar</a>
+        </nav>
+        </div>
+    </header>
 
+    <main>
+        <section class="hero">
+            <p id="date"></p>
+            <h2>Welcome back!</h2>
+            <p>Ready to tackle your day?</p>
+        </section>
 
-    
-</body>
+        <div class="grid">
+            <section class="card" id="tasks">
+                <h3>Today’s tasks</h3>
+                <form id="task-form">
+                    <input id="task-input" aria-label="New task" placeholder="Add a task…" required>
+                    <button type="submit">Add</button>
+                </form>
+                <ul id="task-list"></ul>
+            </section>
+            <aside class="card">
+                <h3>Progress</h3>
+                <div class="stat" id="progress">0%</div>
+                <p class="muted" id="progress-text">No tasks yet. Start small.</p>
+                <div class="card focus">
+                    <h3>Ready to focus?</h3>
+                    <a href="Focus.html">Start a study session →</a>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    </body>
 </html>
