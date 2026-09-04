@@ -3,20 +3,280 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title><script src="https://cdn.tailwindcss.com"></script>
+    <title>Calendar | Student Productivity</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="min-h-screen bg-slate-100 text-slate-900">
     <header class="border-b border-slate-200 bg-white">
         <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-            <h1 class="text-2xl font-bold tracking-tight">Student Productivity</h1>
+            <a class="text-2xl font-bold tracking-tight" href="index.html">Student Productivity</a>
             <nav class="flex flex-wrap gap-4 text-sm font-medium text-slate-600" aria-label="Main navigation">
-                <a class="text-slate-600 hover:text-indigo-600" href="workspace.html">Workspace</a>
-                <a class="text-slate-600 hover:text-indigo-600" href="#tasks">Tasks</a>
-                <a class="text-slate-600 hover:text-indigo-600" href="Focus.html">Focus</a>
-                <a class="text-slate-600 hover:text-indigo-600" href="calendar.html">Calendar</a>
+                <a class="hover:text-indigo-600" href="workspace.html">Workspace</a>
+                <a class="hover:text-indigo-600" href="index.html#tasks">Tasks</a>
+                <a class="hover:text-indigo-600" href="Focus.html">Focus</a>
+                <a class="text-indigo-600" href="calendar.html">Calendar</a>
             </nav>
         </div>
     </header>
-    
+
+    <main class="mx-auto max-w-6xl px-6 py-10">
+        <section class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold tracking-tight">Your Google Calendar</h1>
+                    <p class="mt-2 text-slate-600">Connect your own Google account to view and create calendar events.</p>
+                </div>
+                <button class="rounded-lg bg-indigo-600 px-5 py-2.5 font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" id="connect-button" type="button">Connect Google Calendar</button>
+            </div>
+            <p class="mt-4 hidden rounded-lg bg-red-50 p-3 text-sm text-red-700" id="status" role="alert"></p>
+        </section>
+
+        <section class="mt-6 hidden rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200" id="calendar-panel">
+            <div class="flex flex-col gap-4 border-b border-slate-100 pb-5 sm:flex-row sm:items-center sm:justify-between">
+                <div class="flex items-center justify-between gap-4">
+                    <button class="rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-100" id="previous-month" type="button" aria-label="Previous month">←</button>
+                    <h2 class="text-xl font-semibold" id="month-label"></h2>
+                    <button class="rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-100" id="next-month" type="button" aria-label="Next month">→</button>
+                </div>
+                <button class="text-sm font-medium text-slate-500 hover:text-indigo-600" id="sign-out-button" type="button">Sign out</button>
+            </div>
+            <div class="mt-5 overflow-x-auto">
+                <div class="min-w-[44rem]">
+                    <div class="grid grid-cols-7 text-center text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        <div class="p-2">Sun</div><div class="p-2">Mon</div><div class="p-2">Tue</div><div class="p-2">Wed</div><div class="p-2">Thu</div><div class="p-2">Fri</div><div class="p-2">Sat</div>
+                    </div>
+                    <div class="grid grid-cols-7 gap-px overflow-hidden rounded-lg bg-slate-200" id="calendar-grid"></div>
+                </div>
+            </div>
+            <h3 class="mt-8 border-t border-slate-100 pt-6 text-lg font-semibold">Upcoming events</h3>
+            <ul class="mt-4 divide-y divide-slate-100" id="event-list"></ul>
+
+            <form class="mt-8 border-t border-slate-100 pt-6" id="event-form">
+                <h2 class="text-xl font-semibold">Create an event</h2>
+                <div class="mt-4 grid gap-4 sm:grid-cols-2">
+                    <label class="text-sm font-medium text-slate-700 sm:col-span-2">Title
+                        <input class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 font-normal outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" id="event-title" required>
+                    </label>
+                    <label class="text-sm font-medium text-slate-700">Start
+                        <input class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 font-normal outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" id="event-start" type="datetime-local" required>
+                    </label>
+                    <label class="text-sm font-medium text-slate-700">End
+                        <input class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 font-normal outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" id="event-end" type="datetime-local" required>
+                    </label>
+                </div>
+                <button class="mt-4 rounded-lg bg-slate-900 px-5 py-2.5 font-medium text-white hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2" type="submit">Create event</button>
+            </form>
+        </section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+        import { browserLocalPersistence, getAuth, GoogleAuthProvider, onAuthStateChanged, setPersistence, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAciZ1LY9gJlXIIKEyictRZlX-fzjU6zFU",
+            authDomain: "student-productivity-e14a6.firebaseapp.com",
+            projectId: "student-productivity-e14a6",
+            storageBucket: "student-productivity-e14a6.firebasestorage.app",
+            messagingSenderId: "291163694614",
+            appId: "1:291163694614:web:cc1590ca0ffcf5e2c57737"
+        };
+
+        const auth = getAuth(initializeApp(firebaseConfig));
+        const accessTokenKey = "student-productivity-calendar-token";
+        const provider = new GoogleAuthProvider();
+        provider.addScope("https://www.googleapis.com/auth/calendar.events");
+        const connectButton = document.querySelector("#connect-button");
+        const signOutButton = document.querySelector("#sign-out-button");
+        const calendarPanel = document.querySelector("#calendar-panel");
+        const eventList = document.querySelector("#event-list");
+        const eventForm = document.querySelector("#event-form");
+        const status = document.querySelector("#status");
+        const monthLabel = document.querySelector("#month-label");
+        const calendarGrid = document.querySelector("#calendar-grid");
+        let displayedMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+        let calendarEvents = [];
+        let accessToken = localStorage.getItem(accessTokenKey);
+
+        function showError(message) {
+            status.textContent = message;
+            status.classList.remove("hidden");
+        }
+
+        function updateConnectionView(connected) {
+            calendarPanel.classList.toggle("hidden", !connected);
+            connectButton.classList.toggle("hidden", connected);
+        }
+
+        function formatEventDate(event) {
+            if (event.start?.date) {
+                const [year, month, day] = event.start.date.split("-").map(Number);
+                return new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(new Date(year, month - 1, day));
+            }
+            if (event.start?.dateTime) {
+                return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(event.start.dateTime));
+            }
+            return "Date unavailable";
+        }
+
+        function eventDateKey(event) {
+            if (event.start?.date) return event.start.date;
+            const date = new Date(event.start?.dateTime);
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+        }
+
+        function dateKey(year, month, day) {
+            return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        }
+
+        function renderCalendar() {
+            const year = displayedMonth.getFullYear();
+            const month = displayedMonth.getMonth();
+            monthLabel.textContent = displayedMonth.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+            calendarGrid.replaceChildren();
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const todayKey = dateKey(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+
+            for (let index = 0; index < firstDay; index += 1) {
+                const blank = document.createElement("div");
+                blank.className = "min-h-28 bg-slate-50";
+                calendarGrid.append(blank);
+            }
+
+            for (let day = 1; day <= daysInMonth; day += 1) {
+                const key = dateKey(year, month, day);
+                const cell = document.createElement("div");
+                cell.className = "min-h-28 bg-white p-2";
+                const number = document.createElement("div");
+                number.className = `mb-2 flex h-7 w-7 items-center justify-center rounded-full text-sm ${key === todayKey ? "bg-indigo-600 font-bold text-white" : "text-slate-700"}`;
+                number.textContent = day;
+                cell.append(number);
+
+                calendarEvents.filter((event) => eventDateKey(event) === key).forEach((event) => {
+                    const chip = document.createElement("div");
+                    chip.className = "mb-1 truncate rounded bg-indigo-100 px-2 py-1 text-left text-xs font-medium text-indigo-800";
+                    chip.textContent = event.summary || "Untitled event";
+                    chip.title = formatEventDate(event);
+                    cell.append(chip);
+                });
+                calendarGrid.append(cell);
+            }
+        }
+
+        function renderEvents(events) {
+            eventList.replaceChildren();
+            if (!events.length) {
+                const empty = document.createElement("li");
+                empty.className = "py-4 text-slate-500";
+                empty.textContent = "No upcoming events found.";
+                eventList.append(empty);
+                return;
+            }
+            events.forEach((event) => {
+                const item = document.createElement("li");
+                item.className = "py-4";
+                const title = document.createElement("p");
+                title.className = "font-medium";
+                title.textContent = event.summary || "Untitled event";
+                const date = document.createElement("p");
+                date.className = "mt-1 text-sm text-slate-500";
+                date.textContent = formatEventDate(event);
+                item.append(title, date);
+                eventList.append(item);
+            });
+        }
+
+        async function calendarRequest(path, options = {}) {
+            const response = await fetch(`https://www.googleapis.com/calendar/v3${path}`, {
+                ...options,
+                headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json", ...options.headers }
+            });
+            if (response.status === 401) {
+                localStorage.removeItem(accessTokenKey);
+                accessToken = null;
+                updateConnectionView(false);
+                throw new Error("Your Google Calendar session expired. Please reconnect.");
+            }
+            if (!response.ok) throw new Error(`Google Calendar request failed (${response.status}).`);
+            return response.json();
+        }
+
+        async function loadEvents() {
+            const start = new Date(displayedMonth);
+            const end = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() + 1, 1);
+            const params = new URLSearchParams({ maxResults: "250", orderBy: "startTime", singleEvents: "true", timeMin: start.toISOString(), timeMax: end.toISOString() });
+            const data = await calendarRequest(`/calendars/primary/events?${params}`);
+            calendarEvents = data.items || [];
+            renderCalendar();
+            renderEvents(calendarEvents);
+        }
+
+        connectButton.addEventListener("click", async () => {
+            status.classList.add("hidden");
+            try {
+                await setPersistence(auth, browserLocalPersistence);
+                const result = await signInWithPopup(auth, provider);
+                accessToken = GoogleAuthProvider.credentialFromResult(result)?.accessToken || null;
+                if (!accessToken) throw new Error("Google did not return a Calendar access token.");
+                localStorage.setItem(accessTokenKey, accessToken);
+                updateConnectionView(true);
+                await loadEvents();
+            } catch (error) {
+                showError(error.message);
+            }
+        });
+
+        signOutButton.addEventListener("click", async () => {
+            accessToken = null;
+            localStorage.removeItem(accessTokenKey);
+            updateConnectionView(false);
+            await signOut(auth);
+        });
+
+        document.querySelector("#previous-month").addEventListener("click", async () => {
+            displayedMonth.setMonth(displayedMonth.getMonth() - 1);
+            renderCalendar();
+            if (accessToken) await loadEvents();
+        });
+
+        document.querySelector("#next-month").addEventListener("click", async () => {
+            displayedMonth.setMonth(displayedMonth.getMonth() + 1);
+            renderCalendar();
+            if (accessToken) await loadEvents();
+        });
+
+        eventForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            try {
+                await calendarRequest("/calendars/primary/events", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        summary: document.querySelector("#event-title").value,
+                        start: { dateTime: new Date(document.querySelector("#event-start").value).toISOString() },
+                        end: { dateTime: new Date(document.querySelector("#event-end").value).toISOString() }
+                    })
+                });
+                eventForm.reset();
+                await loadEvents();
+            } catch (error) {
+                showError(error.message);
+            }
+        });
+
+        setPersistence(auth, browserLocalPersistence).catch((error) => showError(error.message));
+
+        onAuthStateChanged(auth, async (user) => {
+            const connected = Boolean(user && accessToken);
+            updateConnectionView(connected);
+            if (connected) {
+                try {
+                    await loadEvents();
+                } catch (error) {
+                    showError(error.message);
+                }
+            }
+        });
+    </script>
 </body>
 </html>
