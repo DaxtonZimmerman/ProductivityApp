@@ -6,27 +6,30 @@
     <meta name="google-site-verification" content="1XfWcX1oxRPqoX_yrLU5fHXpGQr2AdU7563kB250p4A" />
     <title>Student Productivity</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
 </head>
 <body class="min-h-screen bg-slate-100 text-slate-900">
     <header class="border-b border-slate-200 bg-white">
-        <div class="mx-auto max-w-6xl flex items-center justify-between px-6 py-5">
-        <h1>Student Productivity</h1>
-        <nav aria-label="Main navigation">
-            <a href="workspace.html">Workspace</a>
-            <a href="#tasks">Tasks</a>
-            <a href="Focus.html">Focus</a>
-            <a href="calendar.html">Calendar</a>
-            <a href="notes.html">Notes</a>
-        </nav>
-        <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-            <h1 class="text-2xl font-bold tracking-tight">Student Productivity</h1>
+        <div class="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+            <a class="text-2xl font-bold tracking-tight" href="index.html">Student Productivity</a>
             <nav class="flex flex-wrap gap-4 text-sm font-medium text-slate-600" aria-label="Main navigation">
-                <a class="text-slate-600 hover:text-indigo-600" href="workspace.html">Workspace</a>
+                <a class="text-slate-600 hover:text-indigo-600" href="index.html">Workspace</a>
                 <a class="text-slate-600 hover:text-indigo-600" href="#tasks">Tasks</a>
                 <a class="text-slate-600 hover:text-indigo-600" href="Focus.html">Focus</a>
                 <a class="text-slate-600 hover:text-indigo-600" href="calendar.html">Calendar</a>
+                <a class="text-slate-600 hover:text-indigo-600" href="notes.html">Notes</a>
             </nav>
+            <div class="relative">
+                <button class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" id="profile-button" type="button" aria-expanded="false" aria-controls="profile-menu" aria-label="Open profile menu">
+                    <span aria-hidden="true">👤</span>
+                </button>
+                <div class="absolute right-0 z-10 mt-2 hidden w-56 rounded-xl bg-white p-2 shadow-lg ring-1 ring-slate-200" id="profile-menu">
+                    <p class="hidden border-b border-slate-100 px-3 py-2 text-sm text-slate-600" id="user-name"></p>
+                    <button class="w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-indigo-600 hover:bg-indigo-50" id="google-sign-in" type="button">Sign in with Google</button>
+                    <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100" href="#about">About</a>
+                    <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100" href="#settings">Settings</a>
+                    <button class="hidden w-full rounded-lg px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100" id="google-sign-out" type="button">Sign out</button>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -68,5 +71,67 @@
         <a class="hover:text-indigo-600" href="privacy.html">Privacy Policy</a>
     </footer>
 
-    </body>
+    <script type="module">
+        import { browserLocalPersistence, getAuth, GoogleAuthProvider, onAuthStateChanged, setPersistence, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+
+        const app = initializeApp({
+            apiKey: "AIzaSyAciZ1LY9gJlXIIKEyictRZlX-fzjU6zFU",
+            authDomain: "student-productivity-e14a6.firebaseapp.com",
+            projectId: "student-productivity-e14a6",
+            storageBucket: "student-productivity-e14a6.firebasestorage.app",
+            messagingSenderId: "291163694614",
+            appId: "1:291163694614:web:cc1590ca0ffcf5e2c57737"
+        });
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+        const profileButton = document.querySelector("#profile-button");
+        const profileMenu = document.querySelector("#profile-menu");
+        const signInButton = document.querySelector("#google-sign-in");
+        const signOutButton = document.querySelector("#google-sign-out");
+        const userName = document.querySelector("#user-name");
+
+        setPersistence(auth, browserLocalPersistence);
+
+        function closeProfileMenu() {
+            profileMenu.classList.add("hidden");
+            profileButton.setAttribute("aria-expanded", "false");
+        }
+
+        profileButton.addEventListener("click", () => {
+            const isOpen = !profileMenu.classList.contains("hidden");
+            profileMenu.classList.toggle("hidden", isOpen);
+            profileButton.setAttribute("aria-expanded", String(!isOpen));
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!profileButton.contains(event.target) && !profileMenu.contains(event.target)) {
+                closeProfileMenu();
+            }
+        });
+
+        signInButton.addEventListener("click", async () => {
+            signInButton.disabled = true;
+            try {
+                await signInWithPopup(auth, provider);
+                closeProfileMenu();
+            } finally {
+                signInButton.disabled = false;
+            }
+        });
+
+        signOutButton.addEventListener("click", async () => {
+            await signOut(auth);
+            closeProfileMenu();
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            const signedIn = Boolean(user);
+            signInButton.classList.toggle("hidden", signedIn);
+            signOutButton.classList.toggle("hidden", !signedIn);
+            userName.classList.toggle("hidden", !signedIn);
+            userName.textContent = user?.displayName || user?.email || "";
+        });
+    </script>
+</body>
 </html>
