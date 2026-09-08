@@ -1,41 +1,113 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="images/favicon.ico?v=2" type="image/x-icon" />
     <title>About | Student Productivity</title>
     <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="flex h-screen overflow-hidden bg-slate-100 text-slate-900 max-[620px]:flex-col max-[620px]:h-auto max-[620px]:overflow-auto">
-<aside class="sticky top-0 flex h-screen w-[250px] shrink-0 flex-col gap-[30px] overflow-hidden border-r border-[#dfe2e9] bg-[#fafbfe] px-5 py-8 max-[900px]:w-[210px] max-[900px]:px-3 max-[900px]:py-7 max-[620px]:static max-[620px]:h-auto max-[620px]:w-full max-[620px]:gap-[18px] max-[620px]:border-b max-[620px]:border-r-0 max-[620px]:p-4">
-    <a class="flex items-center gap-3 px-2 text-[1.15rem] font-bold max-[620px]:p-0" href="index.html"><span class="grid h-[42px] w-[42px] place-items-center rounded-md bg-[#4c7ff3] text-[1.5rem] text-white max-[620px]:h-[34px] max-[620px]:w-[34px] max-[620px]:text-[1.1rem]" aria-hidden="true">S</span><span>Student<span class="block text-[.67rem] font-medium text-[#8b91a0] max-[620px]:ml-[5px] max-[620px]:inline max-[620px]:text-base">Productivity</span></span></a>
-    <p class="px-4 pt-2 text-xs tracking-[.02em] text-[#66738c] max-[620px]:hidden">WORKSPACE</p>
-    <nav class="-mt-4 grid gap-2 max-[620px]:m-0 max-[620px]:flex max-[620px]:flex-wrap max-[620px]:justify-between max-[620px]:gap-1" aria-label="Main navigation">
-        <a class="flex items-center rounded-[5px] px-4 py-3 text-[.95rem] text-[#58657b] hover:bg-[#f4f5fc] max-[620px]:min-h-11 max-[620px]:px-2 max-[620px]:py-2 max-[620px]:text-xs" href="index.html">Dashboard</a>
-        <a class="flex items-center rounded-[5px] px-4 py-3 text-[.95rem] text-[#58657b] hover:bg-[#f4f5fc] max-[620px]:min-h-11 max-[620px]:px-2 max-[620px]:py-2 max-[620px]:text-xs" href="tasks.html">Tasks</a>
-        <a class="flex items-center rounded-[5px] px-4 py-3 text-[.95rem] text-[#58657b] hover:bg-[#f4f5fc] max-[620px]:min-h-11 max-[620px]:px-2 max-[620px]:py-2 max-[620px]:text-xs" href="calendar.html">Calendar</a>
-        <a class="flex items-center rounded-[5px] px-4 py-3 text-[.95rem] text-[#58657b] hover:bg-[#f4f5fc] max-[620px]:min-h-11 max-[620px]:px-2 max-[620px]:py-2 max-[620px]:text-xs" href="notes.html">Notes</a>
-    </nav>
-    <div class="mt-auto grid gap-3 px-3 pb-7 text-sm text-[#66738c] max-[620px]:hidden"><a href="settings.html">Settings</a><a class="font-semibold text-[#424bc1]" href="about.html" aria-current="page">About</a></div>
-</aside>
-<main class="min-h-0 flex-1 overflow-y-auto">
-    <div class="mx-auto max-w-3xl px-6 py-10">
-        <nav class="mb-6 flex flex-wrap gap-4 text-sm font-medium text-slate-600" aria-label="Main navigation">
-            <a class="hover:text-indigo-600" href="index.html">Dashboard</a>
-            <a class="hover:text-indigo-600" href="tasks.html">Tasks</a>
-            <a class="hover:text-indigo-600" href="calendar.html">Calendar</a>
-            <a class="hover:text-indigo-600" href="notes.html">Notes</a>
-            <a class="hover:text-indigo-600" href="settings.html">Settings</a>
-            <a class="text-indigo-600" href="about.html" aria-current="page">About</a>
+  </head>
+  <body
+    class="flex h-screen overflow-hidden bg-slate-100 text-slate-900 max-[620px]:flex-col max-[620px]:h-auto max-[620px]:overflow-auto"
+  >
+    <aside
+      class="sticky top-0 flex h-screen w-[250px] shrink-0 flex-col gap-[30px] overflow-hidden border-r border-[#dfe2e9] bg-[#fafbfe] px-5 py-8 max-[900px]:w-[210px] max-[900px]:px-3 max-[900px]:py-7 max-[620px]:static max-[620px]:h-auto max-[620px]:w-full max-[620px]:gap-[18px] max-[620px]:border-b max-[620px]:border-r-0 max-[620px]:p-4"
+    >
+      <a
+        class="flex items-center gap-3 px-2 text-[1.15rem] font-bold max-[620px]:p-0"
+        href="index.html"
+        ><span
+          class="grid h-[42px] w-[42px] place-items-center rounded-md bg-[#4c7ff3] text-[1.5rem] text-white max-[620px]:h-[34px] max-[620px]:w-[34px] max-[620px]:text-[1.1rem]"
+          aria-hidden="true"
+          >S</span
+        ><span
+          >Student<span
+            class="block text-[.67rem] font-medium text-[#8b91a0] max-[620px]:ml-[5px] max-[620px]:inline max-[620px]:text-base"
+            >Productivity</span
+          ></span
+        ></a
+      >
+      <p
+        class="px-4 pt-2 text-xs tracking-[.02em] text-[#66738c] max-[620px]:hidden"
+      >
+        WORKSPACE
+      </p>
+      <nav
+        class="-mt-4 grid gap-2 max-[620px]:m-0 max-[620px]:flex max-[620px]:flex-wrap max-[620px]:justify-between max-[620px]:gap-1"
+        aria-label="Main navigation"
+      >
+        <a
+          class="flex items-center rounded-[5px] px-4 py-3 text-[.95rem] text-[#58657b] hover:bg-[#f4f5fc] max-[620px]:min-h-11 max-[620px]:px-2 max-[620px]:py-2 max-[620px]:text-xs"
+          href="index.html"
+          >Dashboard</a
+        >
+        <a
+          class="flex items-center rounded-[5px] px-4 py-3 text-[.95rem] text-[#58657b] hover:bg-[#f4f5fc] max-[620px]:min-h-11 max-[620px]:px-2 max-[620px]:py-2 max-[620px]:text-xs"
+          href="tasks.html"
+          >Tasks</a
+        >
+        <a
+          class="flex items-center rounded-[5px] px-4 py-3 text-[.95rem] text-[#58657b] hover:bg-[#f4f5fc] max-[620px]:min-h-11 max-[620px]:px-2 max-[620px]:py-2 max-[620px]:text-xs"
+          href="calendar.html"
+          >Calendar</a
+        >
+        <a
+          class="flex items-center rounded-[5px] px-4 py-3 text-[.95rem] text-[#58657b] hover:bg-[#f4f5fc] max-[620px]:min-h-11 max-[620px]:px-2 max-[620px]:py-2 max-[620px]:text-xs"
+          href="notes.html"
+          >Notes</a
+        >
+      </nav>
+      <div
+        class="mt-auto grid gap-3 px-3 pb-7 text-sm text-[#66738c] max-[620px]:hidden"
+      >
+        <a href="settings.html">Settings</a
+        ><a
+          class="font-semibold text-[#424bc1]"
+          href="about.html"
+          aria-current="page"
+          >About</a
+        >
+      </div>
+    </aside>
+    <main class="min-h-0 flex-1 overflow-y-auto">
+      <div class="mx-auto max-w-3xl px-6 py-10">
+        <nav
+          class="mb-6 flex flex-wrap gap-4 text-sm font-medium text-slate-600"
+          aria-label="Main navigation"
+        >
+          <a class="hover:text-indigo-600" href="index.html">Dashboard</a>
+          <a class="hover:text-indigo-600" href="tasks.html">Tasks</a>
+          <a class="hover:text-indigo-600" href="calendar.html">Calendar</a>
+          <a class="hover:text-indigo-600" href="notes.html">Notes</a>
+          <a class="hover:text-indigo-600" href="settings.html">Settings</a>
+          <a class="text-indigo-600" href="about.html" aria-current="page"
+            >About</a
+          >
         </nav>
-        <a class="text-sm font-medium text-indigo-600 hover:text-indigo-800" href="index.html">← Back to workspace</a>
-        <article class="mt-6 rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
-            <h1 class="text-3xl font-bold">About Student Productivity</h1>
-            <p class="mt-4 leading-7 text-slate-600">Student Productivity is a simple workspace for managing daily tasks, organizing notes, and viewing your Google Calendar.</p>
-            <p class="mt-4 leading-7 text-slate-600">Tasks and notes are saved in your browser. Google Calendar features use your own Google account after you explicitly connect it.</p>
-            <a class="mt-6 inline-block font-medium text-indigo-600 hover:text-indigo-800" href="privacy.html">Read the privacy policy →</a>
+        <a
+          class="text-sm font-medium text-indigo-600 hover:text-indigo-800"
+          href="index.html"
+          >← Back to workspace</a
+        >
+        <article
+          class="mt-6 rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200"
+        >
+          <h1 class="text-3xl font-bold">About Student Productivity</h1>
+          <p class="mt-4 leading-7 text-slate-600">
+            Student Productivity is a simple workspace for managing daily tasks,
+            organizing notes, and viewing your Google Calendar.
+          </p>
+          <p class="mt-4 leading-7 text-slate-600">
+            Tasks and notes are saved in your browser. Google Calendar features
+            use your own Google account after you explicitly connect it.
+          </p>
+          <a
+            class="mt-6 inline-block font-medium text-indigo-600 hover:text-indigo-800"
+            href="privacy.html"
+            >Read the privacy policy →</a
+          >
         </article>
-    </div>
-</main>
-</body>
+      </div>
+    </main>
+  </body>
 </html>
