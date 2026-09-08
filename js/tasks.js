@@ -15,7 +15,7 @@ let activeFilter = "all";
 function readTasks() {
     try {
         const storedTasks = JSON.parse(localStorage.getItem(taskStorageKey) || "[]");
-        return Array.isArray(storedTasks) ? storedTasks : [];
+        return Array.isArray(storedTasks) ? storedTasks.filter(task => task && typeof task === "object").map(task => ({ ...task, title: task.title ?? task.text ?? "Untitled task", completed: task.completed ?? task.done ?? false })) : [];
     } catch {
         return [];
     }

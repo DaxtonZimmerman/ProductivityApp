@@ -5,71 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="1XfWcX1oxRPqoX_yrLU5fHXpGQr2AdU7563kB250p4A" />
     <title>Student Productivity</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="js/dashboard.js" defer></script>
 </head>
-<body class="min-h-screen bg-slate-100 text-slate-900">
-    <header class="border-b border-slate-200 bg-white">
-        <div class="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
-            <a class="text-2xl font-bold tracking-tight" href="index.html">Student Productivity</a>
-            <nav class="flex flex-wrap gap-4 text-sm font-medium text-slate-600" aria-label="Main navigation">
-                <a class="text-slate-600 hover:text-indigo-600" href="index.html">Workspace</a>
-                <a class="text-slate-600 hover:text-indigo-600" href="tasks.html">Tasks</a>
-                <a class="text-slate-600 hover:text-indigo-600" href="calendar.html">Calendar</a>
-                <a class="text-slate-600 hover:text-indigo-600" href="notes.html">Notes</a>
-            </nav>
-            <div class="relative">
+<body>
+<a class="skip-link" href="#main">Skip to dashboard</a>
+<div class="app-shell">
+<aside class="sidebar">
+<a class="brand" href="index.html"><span class="brand-icon" aria-hidden="true">S</span><span>Student<span class="brand-sub">Productivity</span></span></a>
+<p class="nav-label">WORKSPACE</p>
+<nav aria-label="Main navigation">
+<a class="active" aria-current="page" href="index.html">Dashboard</a>
+<a href="tasks.html">Tasks</a>
+<a href="calendar.html">Calendar</a>
+<a href="notes.html">Notes</a>
+</nav>
+<div class="sidebar-bottom"><a href="settings.html">Settings</a><a href="about.html">About</a></div>
+</aside>
+<div class="workspace">
+<header class="topbar"><span>My workspace <span class="breadcrumb">/ Dashboard</span></span>            <div class="relative">
                 <button class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" id="profile-button" type="button" aria-expanded="false" aria-controls="profile-menu" aria-label="Open profile menu">
                     <span aria-hidden="true">👤</span>
                 </button>
                 <div class="absolute right-0 z-10 mt-2 hidden w-56 rounded-xl bg-white p-2 shadow-lg ring-1 ring-slate-200" id="profile-menu">
                     <p class="hidden border-b border-slate-100 px-3 py-2 text-sm text-slate-600" id="user-name"></p>
                     <button class="w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-indigo-600 hover:bg-indigo-50" id="google-sign-in" type="button">Sign in with Google</button>
-                    <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100" href="#about">About</a>
-                    <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100" href="#settings">Settings</a>
+                    <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100" href="about.html">About</a>
+                    <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100" href="settings.html">Settings</a>
                     <button class="hidden w-full rounded-lg px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100" id="google-sign-out" type="button">Sign out</button>
                 </div>
             </div>
-        </div>
-    </header>
-
-    <main class="mx-auto max-w-6xl px-6 py-10">
-        <section class="mb-8 rounded-2xl bg-indigo-600 px-6 py-10 text-white shadow-lg">
-            <p id="date"></p>
-            <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Student Productivity</h2>
-            <p class="mt-2 text-indigo-100">Plan tasks, protect your focus time, and keep your schoolwork organized.</p>
-        </section>
-
-        <section class="mb-8 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-            <h2 class="text-xl font-semibold">A simple workspace for your day</h2>
-            <p class="mt-3 leading-7 text-slate-600">Student Productivity helps you create daily tasks, track progress, start focused study sessions, and view your schedule in one place. You can use the task and focus tools without signing in.</p>
-            <p class="mt-3 leading-7 text-slate-600">When you choose to connect Google Calendar, we request permission to access your calendar events so the app can display and manage events you authorize. We do not request your Google password, sell your information, or use calendar data for advertising.</p>
-        </section>
-
-        <div class="grid gap-6 lg:grid-cols-3">
-            <section class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 lg:col-span-2" id="tasks">
-                <h3 class="text-xl font-semibold">Today’s tasks</h3>
-                <form id="task-form" class="mt-5 flex flex-col gap-3 sm:flex-row" aria-label="Add a new task">
-                    <input class="flex-1 min-w-0 rounded-lg border px-4 py-3 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" id="task-input" aria-label="New task" placeholder="Add a task…" required>
-                    <button type="submit" class="rounded-lg bg-indigo-600 px-5 py-2.5 font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Add</button>
-                </form>
-                <ul id="task-list"></ul>
-            </section>
-            <aside class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <h3 class="text-xl font-semibold">Progress</h3>
-                <div class="mt-4 text-4xl font-bold text-indigo-600" id="progress">0%</div>
-                <p class="mt-2 text-sm text-slate-500" id="progress-text">No tasks yet.</p>
-                <div class="mt-8 rounded-xl bg-slate-50 p-5">
-                    <h3 class="font-semibold">Ready to focus?</h3>
-                    <a class="mt-2 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800" href="Focus.html">Start a study session →</a>
-                </div>
-            </aside>
-        </div>
-    </main>
-
-    <footer class="mx-auto max-w-6xl px-6 pb-8 text-sm text-slate-500">
-        <a class="hover:text-indigo-600" href="privacy.html">Privacy Policy</a>
-    </footer>
-
+</header>
+<main id="main">
+<section class="intro"><div><p class="eyebrow" id="date"></p><h1>Dashboard</h1></div><a class="button primary" href="#task-input">＋ Add a task</a></section>
+<section class="stats" aria-label="Task overview">
+<article class="stat"><span class="stat-label">Total tasks </span><strong id="total-count">0</strong></article>
+<article class="stat"><span class="stat-label">Completed </span><strong id="complete-count">0</strong></article>
+<article class="stat"><span class="stat-label">Remaining </span><strong id="remaining-count">0</strong></article>
+</section>
+<div class="dashboard-grid">
+<section class="card tasks-card" aria-labelledby="tasks-heading"><div class="section-heading"><div><h2 id="tasks-heading">Your tasks</h2></div><a href="tasks.html">Manage tasks</a></div>
+<form id="task-form" aria-label="Add a new task"><label class="sr-only" for="task-input">New task</label><input id="task-input" placeholder="Add a task…" maxlength="300" required><button class="button primary" type="submit">Add task</button></form>
+<div class="filters" role="group" aria-label="Filter tasks"><button type="button" data-filter="all" aria-pressed="true">All tasks</button><button type="button" data-filter="pending" aria-pressed="false">To do</button><button type="button" data-filter="completed" aria-pressed="false">Completed</button></div>
+<ul id="task-list"></ul><p class="storage-note">Tasks are saved in this browser.</p><p id="task-status" role="status" class="sr-only"></p><p id="task-error" role="alert" hidden></p></section>
+<div class="right-column"><section class="card progress-card" aria-labelledby="progress-heading"><div class="section-heading"><h2 id="progress-heading">Progress</h2><strong id="progress">0%</strong></div><div class="progress-track" id="progress-ring" aria-hidden="true"></div><p id="progress-text">No tasks yet.</p></section>
+</div>
+<section class="card schedule-card"><div class="section-heading"><h2>Coming up</h2><a href="calendar.html">Open calendar</a></div><ul id="upcoming-list"></ul></section>
+</div>
+<footer><span>Student Productivity</span><a href="privacy.html">Privacy Policy</a></footer>
+</main></div></div>
     <script type="module">
         import { browserLocalPersistence, getAuth, GoogleAuthProvider, onAuthStateChanged, setPersistence, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
@@ -131,6 +115,7 @@
             userName.classList.toggle("hidden", !signedIn);
             userName.textContent = user?.displayName || user?.email || "";
         });
+
     </script>
 </body>
 </html>
