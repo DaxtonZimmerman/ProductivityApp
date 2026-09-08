@@ -1,6 +1,7 @@
 
 (() => {
     const key = "student-productivity-tasks";
+    const calendarKey = "student-productivity-calendar-events";
     const $ = (selector) => document.querySelector(selector);
     let filter = "all";
     function readTasks() {
@@ -24,6 +25,60 @@
         const heading = document.createElement("strong"); heading.textContent = title;
         li.append(heading, document.createTextNode(detail)); list.append(li);
     }
+    function readCalendarEvents() {
+        try {
+            const events = JSON.parse(localStorage.getItem(calendarKey) || "[]");
+            const tasks = readTasks()
+                .filter(task => task.date)
+                .map(task => ({
+                    id: `task-${task.id}`,
+                    summary: task.title,
+                    start: { dateTime: `${task.date}T${task.time || "23:59"}` },
+                    localTask: true
+                }));
+            return [...(Array.isArray(events) ? events : []), ...tasks];
+        } catch {
+            return [];
+        }
+    }
+    function eventDate(event) {
+        if (event.start?.date) {
+            const [year, month, day] = event.start.date.split("-").map(Number);
+            return new Date(year, month - 1, day, 23, 59);
+        }
+        return new Date(event.start?.dateTime || "");
+    }
+    function isValidEventDate(event) {
+        return !Number.isNaN(eventDate(event).getTime());
+    }
+    function renderUpcomingEvents() {
+        const list = $("#upcoming-list");
+        if (!list) return;
+        const now = new Date();
+        const events = readCalendarEvents()
+            .filter(event => event && event.start && isValidEventDate(event) && eventDate(event) >= now)
+            .sort((a, b) => eventDate(a) - eventDate(b))
+            .slice(0, 4);
+        list.replaceChildren();
+        if (!events.length) {
+            empty(list, "No upcoming events.", "Connect your calendar or add task deadlines.");
+            return;
+        }
+        events.forEach(event => {
+            const item = document.createElement("li");
+            item.className = "upcoming-row";
+            const date = document.createElement("span");
+            date.textContent = eventDate(event).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+            const details = document.createElement("div");
+            const title = document.createElement("strong");
+            title.textContent = event.summary || "Untitled event";
+            const time = document.createElement("small");
+            time.textContent = event.start.date ? "All day" : eventDate(event).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+            details.append(title, time);
+            item.append(date, details);
+            list.append(item);
+        });
+    }
     function render() {
         const tasks = readTasks(); const completed = tasks.filter(t => t.completed).length;
         $("#total-count").textContent = tasks.length;
@@ -31,6 +86,8 @@
         $("#remaining-count").textContent = tasks.length - completed;
         const percent = tasks.length ? Math.round(completed / tasks.length * 100) : 0;
         $("#progress").textContent = `${percent}%`;
+        $("#priority-progress").textContent = `${percent}%`;
+        $("#additional-progress").textContent = `${tasks.length ? Math.round((tasks.length - completed) / tasks.length * 100) : 0}%`;
         $("#progress-ring").style.setProperty("--progress", `${percent}%`);
         $("#progress-text").textContent = tasks.length ? `${completed} of ${tasks.length} tasks complete` : "No tasks yet.";
         const list = $("#task-list"); list.replaceChildren();
@@ -44,6 +101,7 @@
                 if (save(updated)) $("#task-status").textContent = check.checked ? "Task completed." : "Task marked incomplete.";
                 render(); document.getElementById(check.id)?.focus();
             });
+            renderUpcomingEvents();
             const details = document.createElement("div"); details.className = "task-details";
             const label = document.createElement("label"); label.htmlFor = check.id; label.textContent = task.title;
             const meta = document.createElement("small"); meta.textContent = deadline(task); details.append(label, meta);
@@ -51,13 +109,9 @@
             remove.addEventListener("click", () => { if (save(readTasks().filter(t => t.id !== task.id))) $("#task-status").textContent = "Task deleted."; render(); $("#task-input").focus(); });
             row.append(check, details, remove); list.append(row);
         });
-        const upcoming = $("#upcoming-list"); upcoming.replaceChildren();
-        const today = new Date(); today.setHours(0,0,0,0);
-        const scheduled = tasks.filter(t => !t.completed && t.date && new Date(`${t.date}T${t.time || "23:59"}`) >= today).sort((a,b) => (a.date + (a.time || "23:59")).localeCompare(b.date + (b.time || "23:59"))).slice(0,3);
-        if (!scheduled.length) empty(upcoming, "No upcoming deadlines.", "Add a deadline on the Tasks page to see it here.");
-        scheduled.forEach(t => { const row = document.createElement("li"); row.className = "upcoming-row"; const title = document.createElement("a"); title.href = "tasks.html"; title.textContent = t.title; const date = document.createElement("span"); date.textContent = deadline(t); row.append(title,date); upcoming.append(row); });
     }
-    $("#date").textContent = new Intl.DateTimeFormat(undefined,{weekday:"long",month:"long",day:"numeric"}).format(new Date());
+    const dateLabel = $("#date");
+    if (dateLabel) dateLabel.textContent = new Intl.DateTimeFormat(undefined,{weekday:"long",month:"long",day:"numeric"}).format(new Date());
     $("#task-form").addEventListener("submit", event => {
         event.preventDefault(); const title = $("#task-input").value.trim(); if (!title) return;
         if (save([{id:crypto.randomUUID(), title, completed:false, date:"", time:"", createdAt:new Date().toISOString()}, ...readTasks()])) {
@@ -66,6 +120,11 @@
     });
     function updateFilters() { document.querySelectorAll("[data-filter]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.filter === filter))); }
     document.querySelectorAll("[data-filter]").forEach(b => b.addEventListener("click", () => { filter = b.dataset.filter; updateFilters(); render(); }));
-    window.addEventListener("storage", event => { if (event.key === key || event.key === null) render(); });
+    window.addEventListener("storage", event => { if (event.key === key || event.key === calendarKey || event.key === null) render(); });
+    window.addEventListener("calendar-events-updated", renderUpcomingEvents);
+    window.addEventListener("pageshow", renderUpcomingEvents);
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") renderUpcomingEvents();
+    });
     render();
 })();

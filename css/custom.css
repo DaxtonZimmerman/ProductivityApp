@@ -1,0 +1,64 @@
+/* Bootstrap overrides: a restrained blue accent and readable system type. */
+body {
+    color: #202b3c;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.6;
+}
+a { color: #304fa0; }
+a:hover { color: #1e3678; }
+.navbar-brand { font-size: 1.1rem; color: #202b3c; }
+.navbar .nav-link { color: #465064; }
+.navbar .nav-link:hover { color: #223c86; }
+.btn-primary {
+    background-color: #304fa0;
+    border-color: #304fa0;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.8rem 1.25rem;
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+    background-color: #243d7e;
+    border-color: #243d7e;
+}
+
+/* Original hero: a decorative study photograph with a dark contrast layer. */
+.hero {
+    background-color: #18222e;
+    background-image: linear-gradient(90deg, rgba(12, 20, 32, 0.92), rgba(12, 20, 32, 0.7)), url("../images/hero-background.jpg");
+    background-size: cover;
+    background-position: center;
+}
+.hero h1 { font-size: 2.25rem; line-height: 1.15; letter-spacing: -0.03em; }
+.hero-description { max-width: 34rem; }
+
+/* Original content treatment: simple rules and spacing, without extra cards. */
+.highlights { background-color: #f5f6f8; }
+.highlight dt { color: #465064; }
+.highlight dd { color: #202b3c; }
+.tool { border-top: 2px solid #304fa0; padding-top: 1.25rem; }
+.tool p { color: #465064; }
+.about-section { background-color: #f5f6f8; }
+footer { color: #465064; font-size: 0.875rem; }
+
+/* Keyboard access: a visible skip link and outlines on every interactive control. */
+a:focus-visible, button:focus-visible {
+    outline: 3px solid #c16700;
+    outline-offset: 4px;
+}
+.skip-link:focus {
+    display: block;
+    padding: 0.75rem 1rem;
+    color: #202b3c;
+    background-color: #fff;
+}
+
+/* Mobile first; Bootstrap handles the grids and navbar at their breakpoints. */
+@media (min-width: 768px) {
+    .highlight + .highlight { border-left: 1px solid #d8dce3; }
+    .hero .container { padding-top: 5rem !important; padding-bottom: 5rem !important; }
+    .hero h1 { font-size: 3rem; }
+}
+@media (min-width: 1200px) {
+    .hero h1 { font-size: 3.5rem; }
+}
