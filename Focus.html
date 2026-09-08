@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus | Student Productivity</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-100 text-slate-900">
+    <main class="mx-auto max-w-xl px-6 py-10 text-center">
+        <a class="text-sm font-medium text-indigo-600 hover:text-indigo-800" href="index.html">← Back to workspace</a>
+        <section class="mt-6 rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
+            <h1 class="text-3xl font-bold">Focus session</h1>
+            <p class="mt-2 text-slate-600">Set a timer and work without distractions.</p>
+            <div class="my-8 text-6xl font-bold tabular-nums text-indigo-600" id="timer">25:00</div>
+            <div class="flex justify-center gap-3">
+                <button class="rounded-lg bg-indigo-600 px-5 py-2.5 font-medium text-white hover:bg-indigo-700" id="start" type="button">Start</button>
+                <button class="rounded-lg border border-slate-300 px-5 py-2.5 font-medium hover:bg-slate-50" id="reset" type="button">Reset</button>
+            </div>
+        </section>
+    </main>
+    <script>
+        let remaining = 25 * 60;
+        let interval;
+        const timer = document.querySelector("#timer");
+        function renderTimer() {
+            timer.textContent = `${String(Math.floor(remaining / 60)).padStart(2, "0")}:${String(remaining % 60).padStart(2, "0")}`;
+        }
+        document.querySelector("#start").addEventListener("click", (event) => {
+            if (interval) {
+                clearInterval(interval);
+                interval = undefined;
+                event.currentTarget.textContent = "Start";
+                return;
+            }
+            event.currentTarget.textContent = "Pause";
+            interval = setInterval(() => {
+                remaining = Math.max(remaining - 1, 0);
+                renderTimer();
+                if (!remaining) {
+                    clearInterval(interval);
+                    interval = undefined;
+                    event.currentTarget.textContent = "Start";
+                }
+            }, 1000);
+        });
+        document.querySelector("#reset").addEventListener("click", () => {
+            clearInterval(interval);
+            interval = undefined;
+            remaining = 25 * 60;
+            document.querySelector("#start").textContent = "Start";
+            renderTimer();
+        });
+    </script>
+</body>
+</html>

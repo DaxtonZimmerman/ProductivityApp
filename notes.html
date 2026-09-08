@@ -7,14 +7,8 @@
 
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="js/notes.js" defer></script>
-
-
-    <link rel="stylesheet" href="css/Notes.css">
-
-
 </head>
-<body class="flex h-screen flex-col overflow-hidden bg-slate-100 text-slate-900">
+<body class="min-h-screen bg-slate-100 text-slate-900">
 
     <header class="shrink-0 border-b border-slate-200 bg-white">
 
@@ -22,7 +16,7 @@
             <h1 class="text-2xl font-bold tracking-tight">Student Productivity</h1>
             <nav class="flex flex-wrap gap-4 text-sm font-medium text-slate-600" aria-label="Main navigation">
                 <a class="text-slate-600 hover:text-indigo-600" href="index.html">Workspace</a>
-                <a class="text-slate-600 hover:text-indigo-600" href="#tasks">Tasks</a>
+                <a class="text-slate-600 hover:text-indigo-600" href="index.html#tasks">Tasks</a>
                 <a class="text-slate-600 hover:text-indigo-600" href="Focus.html">Focus</a>
                 <a class="text-slate-600 hover:text-indigo-600" href="calendar.html">Calendar</a>
                 <a class="text-slate-600 hover:text-indigo-600" href="notes.html">Notes</a>
@@ -30,15 +24,75 @@
         </div>
     </header>
     
-    <section class="flex min-h-0 flex-1 bg-slate-100">
-        <aside id="notes-sidebar" class="relative h-full w-12 shrink-0 rounded-bl-none rounded-r-[25px] bg-white p-3 text-slate-600 transition-[width] duration-300" aria-label="Notes sidebar">
-            <button id="sidebar-toggle" class="absolute right-2 top-4 flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-lg leading-none text-slate-600 shadow-sm transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" type="button" aria-controls="notes-sidebar" aria-expanded="false" aria-label="Open notes sidebar">
-                <span aria-hidden="true">→</span>
-            </button>
-        </aside>
-
-    </section>
-
-    
+    <main class="mx-auto max-w-6xl px-6 py-10">
+        <section class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+            <h2 class="text-2xl font-bold">Notes</h2>
+            <p class="mt-2 text-slate-600">Write and save notes in this browser.</p>
+            <input class="mt-6 w-full rounded-lg border border-slate-300 px-4 py-3 text-lg outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" id="note-title" placeholder="Note title">
+            <textarea class="mt-4 min-h-64 w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" id="note-content" placeholder="Start writing..."></textarea>
+            <div class="mt-4 flex justify-between">
+                <span class="text-sm text-slate-500" id="save-status">Saved locally</span>
+                <button class="rounded-lg bg-indigo-600 px-5 py-2.5 font-medium text-white hover:bg-indigo-700" id="save-note" type="button">Save note</button>
+            </div>
+        </section>
+        <section class="mt-6 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+            <h2 class="text-xl font-semibold">Saved notes</h2>
+            <ul class="mt-4 divide-y divide-slate-100" id="note-list"></ul>
+        </section>
+    </main>
+    <script>
+        const noteKey = "student-productivity-notes";
+        let notes = JSON.parse(localStorage.getItem(noteKey) || "[]");
+        const titleInput = document.querySelector("#note-title");
+        const contentInput = document.querySelector("#note-content");
+        const noteList = document.querySelector("#note-list");
+        function saveNotes() {
+            localStorage.setItem(noteKey, JSON.stringify(notes));
+        }
+        function renderNotes() {
+            noteList.replaceChildren();
+            notes.forEach((note) => {
+                const item = document.createElement("li");
+                item.className = "flex items-center justify-between gap-4 py-3";
+                const button = document.createElement("button");
+                button.className = "text-left";
+                button.type = "button";
+                const noteTitle = document.createElement("strong");
+                noteTitle.className = "block";
+                noteTitle.textContent = note.title || "Untitled note";
+                const notePreview = document.createElement("span");
+                notePreview.className = "text-sm text-slate-500";
+                notePreview.textContent = note.content.slice(0, 80);
+                button.append(noteTitle, notePreview);
+                button.addEventListener("click", () => {
+                    titleInput.value = note.title;
+                    contentInput.value = note.content;
+                });
+                const remove = document.createElement("button");
+                remove.className = "text-sm text-red-600";
+                remove.type = "button";
+                remove.textContent = "Delete";
+                remove.addEventListener("click", () => {
+                    notes = notes.filter((candidate) => candidate.id !== note.id);
+                    saveNotes();
+                    renderNotes();
+                });
+                item.append(button, remove);
+                noteList.append(item);
+            });
+        }
+        document.querySelector("#save-note").addEventListener("click", () => {
+            const title = titleInput.value.trim();
+            const content = contentInput.value.trim();
+            if (!title && !content) return;
+            notes.unshift({ id: crypto.randomUUID(), title, content });
+            saveNotes();
+            titleInput.value = "";
+            contentInput.value = "";
+            document.querySelector("#save-status").textContent = "Saved just now";
+            renderNotes();
+        });
+        renderNotes();
+    </script>
 </body>
 </html>
