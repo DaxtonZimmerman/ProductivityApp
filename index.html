@@ -2,120 +2,87 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="1XfWcX1oxRPqoX_yrLU5fHXpGQr2AdU7563kB250p4A" />
-    <title>Student Productivity</title>
-    <link rel="stylesheet" href="css/dashboard.css">
-    <script src="js/dashboard.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Student Productivity brings your assignments, notes, and calendar together in one browser-based workspace.">
+    <meta name="google-site-verification" content="1XfWcX1oxRPqoX_yrLU5fHXpGQr2AdU7563kB250p4A">
+    <title>Student Productivity | Tasks, Notes &amp; Calendar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to dashboard</a>
-<div class="app-shell">
-<aside class="sidebar">
-<a class="brand" href="index.html"><span class="brand-icon" aria-hidden="true">S</span><span>Student<span class="brand-sub">Productivity</span></span></a>
-<p class="nav-label">WORKSPACE</p>
-<nav aria-label="Main navigation">
-<a class="active" aria-current="page" href="index.html">Dashboard</a>
-<a href="tasks.html">Tasks</a>
-<a href="calendar.html">Calendar</a>
-<a href="notes.html">Notes</a>
-</nav>
-<div class="sidebar-bottom"><a href="settings.html">Settings</a><a href="about.html">About</a></div>
-</aside>
-<div class="workspace">
-<header class="topbar"><span>My workspace <span class="breadcrumb">/ Dashboard</span></span>            <div class="relative">
-                <button class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" id="profile-button" type="button" aria-expanded="false" aria-controls="profile-menu" aria-label="Open profile menu">
-                    <span aria-hidden="true">👤</span>
-                </button>
-                <div class="absolute right-0 z-10 mt-2 hidden w-56 rounded-xl bg-white p-2 shadow-lg ring-1 ring-slate-200" id="profile-menu">
-                    <p class="hidden border-b border-slate-100 px-3 py-2 text-sm text-slate-600" id="user-name"></p>
-                    <button class="w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-indigo-600 hover:bg-indigo-50" id="google-sign-in" type="button">Sign in with Google</button>
-                    <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100" href="about.html">About</a>
-                    <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100" href="settings.html">Settings</a>
-                    <button class="hidden w-full rounded-lg px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100" id="google-sign-out" type="button">Sign out</button>
+    <a class="visually-hidden-focusable skip-link" href="#main">Skip to content</a>
+    <!-- Responsive navigation is added at the next project checkpoint. -->
+    <header class="hero text-white" id="home">
+        <div class="container py-5">
+            <p class="mb-3 fw-semibold">Student Productivity</p>
+            <h1 class="display-4 fw-bold mb-3">Keep your schoolwork<br class="d-none d-lg-inline"> in one place.</h1>
+            <p class="hero-description fs-5 mb-4">Track assignments, keep class notes, and check your calendar from a single workspace.</p>
+            <a class="btn btn-primary btn-lg" href="workspace.html">Open your workspace</a>
+        </div>
+    </header>
+    <main id="main">
+        <section class="highlights border-bottom" aria-labelledby="highlights-heading">
+            <div class="container py-4">
+                <h2 class="visually-hidden" id="highlights-heading">At a glance</h2>
+                <dl class="row gy-4 text-center mb-0">
+                    <div class="col-12 col-md-4 highlight">
+                        <dt class="fw-normal">Study tools</dt>
+                        <dd class="fs-2 fw-bold mb-0">3</dd>
+                    </div>
+                    <div class="col-12 col-md-4 highlight">
+                        <dt class="fw-normal">Downloads needed</dt>
+                        <dd class="fs-2 fw-bold mb-0">0</dd>
+                    </div>
+                    <div class="col-12 col-md-4 highlight">
+                        <dt class="fw-normal">Workspace</dt>
+                        <dd class="fs-2 fw-bold mb-0">1</dd>
+                    </div>
+                </dl>
+            </div>
+        </section>
+        <section class="container py-5" id="tools" aria-labelledby="tools-heading">
+            <h2 class="mb-4" id="tools-heading">Tasks, dates, and class notes.</h2>
+            <div class="row g-4">
+                <article class="col-12 col-md-4" id="tasks">
+                    <div class="tool h-100 d-flex flex-column">
+                        <h3 class="h4 mb-3">Tasks</h3>
+                        <p>Write down assignments, set deadlines, and mark them complete as you go.</p>
+                        <a class="mt-auto fw-semibold" href="tasks.html">Open tasks <span aria-hidden="true">&rarr;</span></a>
+                    </div>
+                </article>
+                <article class="col-12 col-md-4" id="calendar">
+                    <div class="tool h-100 d-flex flex-column">
+                        <h3 class="h4 mb-3">Calendar</h3>
+                        <p>See upcoming deadlines alongside the events you choose to connect from Google Calendar.</p>
+                        <a class="mt-auto fw-semibold" href="calendar.html">Open calendar <span aria-hidden="true">&rarr;</span></a>
+                    </div>
+                </article>
+                <article class="col-12 col-md-4" id="notes">
+                    <div class="tool h-100 d-flex flex-column">
+                        <h3 class="h4 mb-3">Notes</h3>
+                        <p>Keep your class notes together and link tasks to the notes they belong with.</p>
+                        <a class="mt-auto fw-semibold" href="notes.html">Open notes <span aria-hidden="true">&rarr;</span></a>
+                    </div>
+                </article>
+            </div>
+        </section>
+        <section class="about-section border-top" id="about" aria-labelledby="about-heading">
+            <div class="container py-5">
+                <div class="row g-3">
+                    <div class="col-12 col-md-4">
+                        <h2 id="about-heading">About the app</h2>
+                    </div>
+                    <div class="col-12 col-md-8">
+                        <p>Student Productivity is a student web-development project built around everyday schoolwork. Tasks and notes are saved in your current browser. Connecting Google Calendar is optional.</p>
+                        <a class="fw-semibold" href="about.html">More about Student Productivity</a>
+                    </div>
                 </div>
             </div>
-</header>
-<main id="main">
-<section class="intro"><div><p class="eyebrow" id="date"></p><h1>Dashboard</h1></div><a class="button primary" href="#task-input">＋ Add a task</a></section>
-<section class="stats" aria-label="Task overview">
-<article class="stat"><span class="stat-label">Total tasks </span><strong id="total-count">0</strong></article>
-<article class="stat"><span class="stat-label">Completed </span><strong id="complete-count">0</strong></article>
-<article class="stat"><span class="stat-label">Remaining </span><strong id="remaining-count">0</strong></article>
-</section>
-<div class="dashboard-grid">
-<section class="card tasks-card" aria-labelledby="tasks-heading"><div class="section-heading"><div><h2 id="tasks-heading">Your tasks</h2></div><a href="tasks.html">Manage tasks</a></div>
-<form id="task-form" aria-label="Add a new task"><label class="sr-only" for="task-input">New task</label><input id="task-input" placeholder="Add a task…" maxlength="300" required><button class="button primary" type="submit">Add task</button></form>
-<div class="filters" role="group" aria-label="Filter tasks"><button type="button" data-filter="all" aria-pressed="true">All tasks</button><button type="button" data-filter="pending" aria-pressed="false">To do</button><button type="button" data-filter="completed" aria-pressed="false">Completed</button></div>
-<ul id="task-list"></ul><p class="storage-note">Tasks are saved in this browser.</p><p id="task-status" role="status" class="sr-only"></p><p id="task-error" role="alert" hidden></p></section>
-<div class="right-column"><section class="card progress-card" aria-labelledby="progress-heading"><div class="section-heading"><h2 id="progress-heading">Progress</h2><strong id="progress">0%</strong></div><div class="progress-track" id="progress-ring" aria-hidden="true"></div><p id="progress-text">No tasks yet.</p></section>
-</div>
-<section class="card schedule-card"><div class="section-heading"><h2>Coming up</h2><a href="calendar.html">Open calendar</a></div><ul id="upcoming-list"></ul></section>
-</div>
-<footer><span>Student Productivity</span><a href="privacy.html">Privacy Policy</a></footer>
-</main></div></div>
-    <script type="module">
-        import { browserLocalPersistence, getAuth, GoogleAuthProvider, onAuthStateChanged, setPersistence, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-
-        const app = initializeApp({
-            apiKey: "AIzaSyAciZ1LY9gJlXIIKEyictRZlX-fzjU6zFU",
-            authDomain: "student-productivity-e14a6.firebaseapp.com",
-            projectId: "student-productivity-e14a6",
-            storageBucket: "student-productivity-e14a6.firebasestorage.app",
-            messagingSenderId: "291163694614",
-            appId: "1:291163694614:web:cc1590ca0ffcf5e2c57737"
-        });
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-        const profileButton = document.querySelector("#profile-button");
-        const profileMenu = document.querySelector("#profile-menu");
-        const signInButton = document.querySelector("#google-sign-in");
-        const signOutButton = document.querySelector("#google-sign-out");
-        const userName = document.querySelector("#user-name");
-
-        setPersistence(auth, browserLocalPersistence);
-
-        function closeProfileMenu() {
-            profileMenu.classList.add("hidden");
-            profileButton.setAttribute("aria-expanded", "false");
-        }
-
-        profileButton.addEventListener("click", () => {
-            const isOpen = !profileMenu.classList.contains("hidden");
-            profileMenu.classList.toggle("hidden", isOpen);
-            profileButton.setAttribute("aria-expanded", String(!isOpen));
-        });
-
-        document.addEventListener("click", (event) => {
-            if (!profileButton.contains(event.target) && !profileMenu.contains(event.target)) {
-                closeProfileMenu();
-            }
-        });
-
-        signInButton.addEventListener("click", async () => {
-            signInButton.disabled = true;
-            try {
-                await signInWithPopup(auth, provider);
-                closeProfileMenu();
-            } finally {
-                signInButton.disabled = false;
-            }
-        });
-
-        signOutButton.addEventListener("click", async () => {
-            await signOut(auth);
-            closeProfileMenu();
-        });
-
-        onAuthStateChanged(auth, (user) => {
-            const signedIn = Boolean(user);
-            signInButton.classList.toggle("hidden", signedIn);
-            signOutButton.classList.toggle("hidden", !signedIn);
-            userName.classList.toggle("hidden", !signedIn);
-            userName.textContent = user?.displayName || user?.email || "";
-        });
-
-    </script>
+        </section>
+    </main>
+    <footer class="container py-4 d-flex flex-column flex-sm-row justify-content-between gap-3">
+        <p class="mb-0">Student Productivity</p>
+        <a href="privacy.html">Privacy Policy</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 </html>
