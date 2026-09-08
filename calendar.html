@@ -97,6 +97,7 @@
         let displayedMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
         let calendarEvents = [];
         let accessToken = localStorage.getItem(accessTokenKey);
+        const calendarStorageKey = "student-productivity-calendar-events";
 
         function showError(message) {
             status.textContent = message;
@@ -104,8 +105,25 @@
         }
 
         function updateConnectionView(connected) {
-            calendarPanel.classList.toggle("hidden", !connected);
+            const hasLocalTasks = getLocalTaskEvents().length > 0;
+            calendarPanel.classList.toggle("hidden", !connected && !hasLocalTasks);
             connectButton.classList.toggle("hidden", connected);
+        }
+
+        function getLocalTaskEvents() {
+            try {
+                const tasks = JSON.parse(localStorage.getItem("student-productivity-tasks") || "[]");
+                return tasks.filter((task) => task.date && task.time).map((task) => ({
+                    id: `local-${task.id}`,
+                    taskId: task.id,
+                    summary: task.title,
+                    start: { dateTime: new Date(`${task.date}T${task.time}`).toISOString() },
+                    localTask: true,
+                    completed: task.completed
+                }));
+            } catch {
+                return [];
+            }
         }
 
         function formatEventDate(event) {
@@ -155,9 +173,10 @@
 
                 calendarEvents.filter((event) => eventDateKey(event) === key).forEach((event) => {
                     const chip = document.createElement("div");
-                    chip.className = "mb-1 truncate rounded bg-indigo-100 px-2 py-1 text-left text-xs font-medium text-indigo-800";
+                    chip.className = `mb-1 truncate rounded px-2 py-1 text-left text-xs font-medium ${event.localTask ? "bg-emerald-100 text-emerald-800" : "bg-indigo-100 text-indigo-800"}`;
                     chip.textContent = event.summary || "Untitled event";
                     chip.title = formatEventDate(event);
+                    makeEventDraggable(chip, event);
                     cell.append(chip);
                 });
                 calendarGrid.append(cell);
@@ -181,10 +200,29 @@
                 title.textContent = event.summary || "Untitled event";
                 const date = document.createElement("p");
                 date.className = "mt-1 text-sm text-slate-500";
-                date.textContent = formatEventDate(event);
+                date.textContent = `${event.localTask ? "Task · " : ""}${formatEventDate(event)}`;
+                makeEventDraggable(item, event);
                 item.append(title, date);
                 eventList.append(item);
             });
+        }
+
+        function makeEventDraggable(element, event) {
+            element.draggable = true;
+            element.classList.add("cursor-grab");
+            element.addEventListener("dragstart", (dragEvent) => {
+                dragEvent.dataTransfer.effectAllowed = "copy";
+                dragEvent.dataTransfer.setData("application/x-productivity-calendar-event", JSON.stringify(event));
+                dragEvent.dataTransfer.setData("text/plain", event.summary || "Calendar event");
+                element.classList.add("opacity-50");
+            });
+            element.addEventListener("dragend", () => element.classList.remove("opacity-50"));
+        }
+
+        function publishCalendarEvents(events) {
+            const uniqueEvents = [...new Map(events.map((event) => [event.id || `${event.summary}-${event.start?.dateTime || event.start?.date}`, event])).values()];
+            localStorage.setItem(calendarStorageKey, JSON.stringify(uniqueEvents));
+            window.dispatchEvent(new CustomEvent("calendar-events-updated", { detail: uniqueEvents }));
         }
 
         async function calendarRequest(path, options = {}) {
@@ -207,9 +245,22 @@
             const end = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() + 1, 1);
             const params = new URLSearchParams({ maxResults: "250", orderBy: "startTime", singleEvents: "true", timeMin: start.toISOString(), timeMax: end.toISOString() });
             const data = await calendarRequest(`/calendars/primary/events?${params}`);
-            calendarEvents = data.items || [];
+            calendarEvents = [...(data.items || []), ...getLocalTaskEvents()];
+            publishCalendarEvents(calendarEvents);
             renderCalendar();
             renderEvents(calendarEvents);
+        }
+
+        function renderLocalCalendar() {
+            if (accessToken) {
+                loadEvents().catch((error) => showError(error.message));
+                return;
+            }
+            calendarEvents = getLocalTaskEvents();
+            publishCalendarEvents(calendarEvents);
+            renderCalendar();
+            renderEvents(calendarEvents);
+            updateConnectionView(Boolean(accessToken));
         }
 
         connectButton.addEventListener("click", async () => {
@@ -265,6 +316,10 @@
         });
 
         setPersistence(auth, browserLocalPersistence).catch((error) => showError(error.message));
+
+        window.addEventListener("storage", renderLocalCalendar);
+        window.addEventListener("tasks-updated", renderLocalCalendar);
+        renderLocalCalendar();
 
         onAuthStateChanged(auth, async (user) => {
             const connected = Boolean(user && accessToken);
