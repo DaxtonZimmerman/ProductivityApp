@@ -15,8 +15,37 @@ const notes = [];
 let selectedNote = null;
 let noteNumber = 0;
 let isOrganized = false;
+const noteStorageKey = 'student-productivity-notes';
 const taskStorageKey = 'student-productivity-tasks';
 const calendarStorageKey = 'student-productivity-calendar-events';
+
+function readNotes() {
+    try {
+        const storedNotes = JSON.parse(localStorage.getItem(noteStorageKey) || '[]');
+        return Array.isArray(storedNotes) ? storedNotes.filter((note) => note && typeof note === 'object') : [];
+    } catch {
+        return [];
+    }
+}
+
+function saveNotes() {
+    try {
+        const storedNotes = notes.map((note) => ({
+            id: note.id,
+            left: note.left,
+            top: note.top,
+            width: note.element.style.width || `${note.element.offsetWidth}px`,
+            text: note.element.querySelector('.note-text').value,
+            items: [...note.element.querySelectorAll('[data-note-item-type]')].map((item) => ({
+                type: item.dataset.noteItemType,
+                task: item.dataset.task ? JSON.parse(item.dataset.task) : null,
+                event: item.dataset.event ? JSON.parse(item.dataset.event) : null
+            }))
+        }));
+        localStorage.setItem(noteStorageKey, JSON.stringify(storedNotes));
+    } catch {
+    }
+}
 
 function readTasks() {
     try {
@@ -166,13 +195,13 @@ function refreshLayout() {
     });
 }
 
-function createNote() {
+function createNote(savedNote = {}) {
     noteNumber += 1;
     const note = {
-        id: `note-${Date.now()}-${noteNumber}`,
-        left: `${32 + (notes.length % 3) * 240}px`,
-        top: `${32 + Math.floor(notes.length / 3) * 190}px`,
-        width: '208px',
+        id: savedNote.id || `note-${Date.now()}-${noteNumber}`,
+        left: savedNote.left || `${32 + (notes.length % 3) * 240}px`,
+        top: savedNote.top || `${32 + Math.floor(notes.length / 3) * 190}px`,
+        width: savedNote.width || '208px',
         element: document.createElement('article')
     };
 
@@ -200,6 +229,8 @@ function createNote() {
         event.stopPropagation();
         deleteNote(note);
     });
+    note.element.querySelector('.note-text').value = savedNote.text || '';
+    note.element.querySelector('.note-text').addEventListener('input', saveNotes);
     note.element.addEventListener('dragover', (event) => {
         if (event.dataTransfer.types.includes('application/x-productivity-task') || event.dataTransfer.types.includes('application/x-productivity-calendar-event')) {
             event.preventDefault();
@@ -222,10 +253,16 @@ function createNote() {
         } catch {
         }
     });
+    note.element.addEventListener('pointerup', saveNotes);
     makeDraggable(note);
+    (savedNote.items || []).forEach((item) => {
+        if (item.type === 'task' && item.task) addTaskToNote(note, item.task);
+        if (item.type === 'event' && item.event) addCalendarEventToNote(note, item.event);
+    });
     selectNote(note);
     refreshLayout();
-    note.element.querySelector('.note-text').focus();
+    if (!savedNote.id) note.element.querySelector('.note-text').focus();
+    saveNotes();
 }
 
 function addTaskToNote(note, task) {
@@ -235,6 +272,8 @@ function addTaskToNote(note, task) {
     const taskChip = document.createElement('div');
     taskChip.className = 'flex items-center gap-2 rounded-lg bg-amber-200/70 px-2 py-1.5 text-xs font-semibold text-amber-950';
     taskChip.dataset.taskId = task.id;
+    taskChip.dataset.noteItemType = 'task';
+    taskChip.dataset.task = JSON.stringify(task);
     taskChip.draggable = false;
     const marker = document.createElement('span');
     marker.className = `h-2 w-2 shrink-0 rounded-full ${task.completed ? 'bg-emerald-500' : 'bg-indigo-500'}`;
@@ -246,6 +285,7 @@ function addTaskToNote(note, task) {
     deadline.textContent = task.time || '';
     taskChip.append(marker, label, deadline);
     taskList.append(taskChip);
+    saveNotes();
 }
 
 function addCalendarEventToNote(note, event) {
@@ -256,6 +296,8 @@ function addCalendarEventToNote(note, event) {
     const eventChip = document.createElement('div');
     eventChip.className = 'flex items-center gap-2 rounded-lg bg-indigo-100/80 px-2 py-1.5 text-xs font-semibold text-indigo-950';
     eventChip.dataset.eventId = event.id || '';
+    eventChip.dataset.noteItemType = 'event';
+    eventChip.dataset.event = JSON.stringify(event);
     if (event.taskId) eventChip.dataset.taskId = event.taskId;
     const marker = document.createElement('span');
     marker.className = 'h-2 w-2 shrink-0 rounded-full bg-indigo-500';
@@ -267,6 +309,7 @@ function addCalendarEventToNote(note, event) {
     deadline.textContent = formatEventDate(event);
     eventChip.append(marker, label, deadline);
     taskList.append(eventChip);
+    saveNotes();
 }
 
 function deleteNote(note) {
@@ -278,6 +321,7 @@ function deleteNote(note) {
     if (selectedNote) selectNote(selectedNote);
     refreshLayout();
     updateStatus();
+    saveNotes();
 }
 
 function makeDraggable(note) {
@@ -300,6 +344,7 @@ function makeDraggable(note) {
         const stopMoving = () => {
             grip.removeEventListener('pointermove', moveNote);
             grip.removeEventListener('pointerup', stopMoving);
+            saveNotes();
         };
         grip.addEventListener('pointermove', moveNote);
         grip.addEventListener('pointerup', stopMoving);
@@ -351,6 +396,7 @@ window.addEventListener('tasks-updated', renderSidebarTasks);
 window.addEventListener('storage', renderSidebarEvents);
 window.addEventListener('calendar-events-updated', renderSidebarEvents);
 
+readNotes().forEach(createNote);
 renderSidebarTasks();
 renderSidebarEvents();
 updateStatus();

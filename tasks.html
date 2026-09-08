@@ -7,34 +7,34 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="js/tasks.js" defer></script>
 </head>
-<body class="min-h-screen bg-slate-100 text-slate-900">
-    <header class="border-b border-slate-200 bg-white">
-        <div class="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
-            <a class="text-2xl font-bold tracking-tight" href="index.html">Student Productivity</a>
-            <nav class="flex flex-wrap gap-4 text-sm font-medium text-slate-600" aria-label="Main navigation">
-                <a class="text-slate-600 hover:text-indigo-600" href="index.html">Dashboard</a>
-                <a class="text-slate-600 hover:text-indigo-600" href="tasks.html">Tasks</a>
-                <a class="text-slate-600 hover:text-indigo-600" href="calendar.html">Calendar</a>
-                <a class="text-slate-600 hover:text-indigo-600" href="notes.html">Notes</a>
-                <a class="text-slate-600 hover:text-indigo-600" href="settings.html">Settings</a>
-                <a class="text-slate-600 hover:text-indigo-600" href="about.html">About</a>
-            </nav>
-            <div class="relative">
-                <button class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" id="profile-button" type="button" aria-expanded="false" aria-controls="profile-menu" aria-label="Open profile menu">
-                    <span aria-hidden="true">👤</span>
-                </button>
-                <div class="absolute right-0 z-10 mt-2 hidden w-56 rounded-xl bg-white p-2 shadow-lg ring-1 ring-slate-200" id="profile-menu">
-                    <p class="hidden border-b border-slate-100 px-3 py-2 text-sm text-slate-600" id="user-name"></p>
-                    <button class="w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-indigo-600 hover:bg-indigo-50" id="google-sign-in" type="button">Sign in with Google</button>
-                    <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100" href="about.html">About</a>
-                    <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100" href="settings.html">Settings</a>
-                    <button class="hidden w-full rounded-lg px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100" id="google-sign-out" type="button">Sign out</button>
-                </div>
-            </div>
+<body class="flex h-screen overflow-hidden bg-slate-100 text-slate-900 max-[620px]:flex-col max-[620px]:h-auto max-[620px]:overflow-auto">
+<aside class="sticky top-0 flex h-screen w-[250px] shrink-0 flex-col gap-[30px] overflow-hidden border-r border-[#dfe2e9] bg-[#fafbfe] px-5 py-8 max-[900px]:w-[210px] max-[900px]:px-3 max-[900px]:py-7 max-[620px]:static max-[620px]:h-auto max-[620px]:w-full max-[620px]:gap-[18px] max-[620px]:border-b max-[620px]:border-r-0 max-[620px]:p-4">
+    <a class="flex items-center gap-3 px-2 text-[1.15rem] font-bold max-[620px]:p-0" href="index.html"><span class="grid h-[42px] w-[42px] place-items-center rounded-md bg-[#4c7ff3] text-[1.5rem] text-white max-[620px]:h-[34px] max-[620px]:w-[34px] max-[620px]:text-[1.1rem]" aria-hidden="true">S</span><span>Student<span class="block text-[.67rem] font-medium text-[#8b91a0] max-[620px]:ml-[5px] max-[620px]:inline max-[620px]:text-base">Productivity</span></span></a>
+    <p class="px-4 pt-2 text-xs tracking-[.02em] text-[#66738c] max-[620px]:hidden">WORKSPACE</p>
+    <nav class="-mt-4 grid gap-2 max-[620px]:m-0 max-[620px]:flex max-[620px]:flex-wrap max-[620px]:justify-between max-[620px]:gap-1" aria-label="Main navigation">
+        <a class="flex items-center rounded-[5px] px-4 py-3 text-[.95rem] text-[#58657b] hover:bg-[#f4f5fc] max-[620px]:min-h-11 max-[620px]:px-2 max-[620px]:py-2 max-[620px]:text-xs" href="index.html">Dashboard</a>
+        <a class="flex items-center rounded-[5px] bg-[#eeefff] px-4 py-3 text-[.95rem] font-semibold text-[#424bc1] hover:bg-[#f4f5fc] max-[620px]:min-h-11 max-[620px]:px-2 max-[620px]:py-2 max-[620px]:text-xs" aria-current="page" href="tasks.html">Tasks</a>
+        <a class="flex items-center rounded-[5px] px-4 py-3 text-[.95rem] text-[#58657b] hover:bg-[#f4f5fc] max-[620px]:min-h-11 max-[620px]:px-2 max-[620px]:py-2 max-[620px]:text-xs" href="calendar.html">Calendar</a>
+        <a class="flex items-center rounded-[5px] px-4 py-3 text-[.95rem] text-[#58657b] hover:bg-[#f4f5fc] max-[620px]:min-h-11 max-[620px]:px-2 max-[620px]:py-2 max-[620px]:text-xs" href="notes.html">Notes</a>
+    </nav>
+    <div class="mt-auto grid gap-3 px-3 pb-7 text-sm text-[#66738c] max-[620px]:hidden"><a href="settings.html">Settings</a><a href="about.html">About</a></div>
+</aside>
+<div class="flex h-screen min-w-0 flex-1 flex-col max-[620px]:h-auto">
+<header class="flex min-h-[76px] items-center justify-between gap-6 border-b border-[#dfe2e9] bg-[#fafbfe] px-[26px] py-[18px] max-[900px]:px-6 max-[620px]:min-h-16 max-[620px]:px-5 max-[620px]:py-2.5">
+    <span class="text-sm">My workspace <span class="pl-2 text-[#67748b]">/ Tasks</span></span>
+    <div class="relative">
+        <button class="grid h-[34px] w-[34px] place-items-center rounded-full border-0 bg-white text-[#2f68d8] shadow-[0_2px_10px_#5c668014] focus:outline-none focus:ring-2 focus:ring-[#668cff]" id="profile-button" type="button" aria-expanded="false" aria-controls="profile-menu" aria-label="Open profile menu"><span aria-hidden="true">👤</span></button>
+        <div id="profile-menu" class="absolute right-0 top-full z-10 mt-2 w-56 rounded-xl border border-[#e1e4ec] bg-white p-2 shadow-[0_10px_30px_#17233b1a]">
+            <p id="user-name" class="hidden w-full break-words px-3 py-2 text-xs"></p>
+            <button class="block w-full border-0 bg-transparent px-3 py-2 text-left text-xs hover:bg-[#eff3ff]" id="google-sign-in" type="button">Sign in with Google</button>
+            <a class="block px-3 py-2 text-xs hover:bg-[#eff3ff]" href="about.html">About</a>
+            <a class="block px-3 py-2 text-xs hover:bg-[#eff3ff]" href="settings.html">Settings</a>
+            <button class="hidden block w-full border-0 bg-transparent px-3 py-2 text-left text-xs hover:bg-[#eff3ff]" id="google-sign-out" type="button">Sign out</button>
         </div>
-    </header>
-
-    <main class="mx-auto max-w-6xl px-6 py-10">
+    </div>
+</header>
+    <main class="min-h-0 flex-1 overflow-y-auto">
+        <div class="mx-auto max-w-6xl px-6 py-10">
         <div class="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
                 <p class="text-sm font-semibold uppercase tracking-[0.18em] text-indigo-600">Plan your day</p>

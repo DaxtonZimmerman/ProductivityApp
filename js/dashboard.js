@@ -21,8 +21,8 @@
         return date.toLocaleDateString(undefined, {month:"short", day:"numeric"}) + (task.time ? " · " + date.toLocaleTimeString(undefined, {hour:"numeric", minute:"2-digit"}) : "");
     }
     function empty(list, title, detail) {
-        const li = document.createElement("li"); li.className = "empty-state";
-        const heading = document.createElement("strong"); heading.textContent = title;
+        const li = document.createElement("li"); li.className = "empty-state px-2.5 py-8 text-center text-xs text-[#9298a6]";
+        const heading = document.createElement("strong"); heading.className = "mb-1 block text-[.82rem] text-[#28354b]"; heading.textContent = title;
         li.append(heading, document.createTextNode(detail)); list.append(li);
     }
     function readCalendarEvents() {
@@ -66,13 +66,13 @@
         }
         events.forEach(event => {
             const item = document.createElement("li");
-            item.className = "upcoming-row";
-            const date = document.createElement("span");
+            item.className = "upcoming-row grid grid-cols-[70px_minmax(0,1fr)] gap-2.5 border-b border-[#edf0f5] py-3.5 text-[.7rem]";
+            const date = document.createElement("span"); date.className = "text-[.65rem] text-[#737b8d]";
             date.textContent = eventDate(event).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
             const details = document.createElement("div");
             const title = document.createElement("strong");
-            title.textContent = event.summary || "Untitled event";
-            const time = document.createElement("small");
+            title.className = "block break-words text-xs font-semibold"; title.textContent = event.summary || "Untitled event";
+            const time = document.createElement("small"); time.className = "mt-1 block text-[.65rem] text-[#9298a6]";
             time.textContent = event.start.date ? "All day" : eventDate(event).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
             details.append(title, time);
             item.append(date, details);
@@ -94,18 +94,18 @@
         const visible = tasks.filter(t => filter === "all" || (filter === "completed" ? t.completed : !t.completed));
         if (!visible.length) empty(list, tasks.length ? "No matching tasks." : "No tasks yet.", tasks.length ? "Try another filter to see your tasks." : "Add a task above.");
         visible.forEach((task, index) => {
-            const row = document.createElement("li"); row.className = "task-row" + (task.completed ? " done" : "");
-            const check = document.createElement("input"); check.type = "checkbox"; check.checked = task.completed; check.id = `dashboard-task-${index}`;
+            const row = document.createElement("li"); row.className = "task-row flex items-center gap-2.5 border-b border-[#f0f1f5] py-3 text-xs" + (task.completed ? " done" : "");
+            const check = document.createElement("input"); check.className = "h-[17px] w-[17px] accent-[#4b7df0]"; check.type = "checkbox"; check.checked = task.completed; check.id = `dashboard-task-${index}`;
             check.addEventListener("change", () => {
                 const updated = readTasks().map(t => t.id === task.id ? {...t, completed: check.checked, done: check.checked} : t);
                 if (save(updated)) $("#task-status").textContent = check.checked ? "Task completed." : "Task marked incomplete.";
                 render(); document.getElementById(check.id)?.focus();
             });
             renderUpcomingEvents();
-            const details = document.createElement("div"); details.className = "task-details";
-            const label = document.createElement("label"); label.htmlFor = check.id; label.textContent = task.title;
-            const meta = document.createElement("small"); meta.textContent = deadline(task); details.append(label, meta);
-            const remove = document.createElement("button"); remove.type = "button"; remove.className = "delete-task"; remove.textContent = "Delete"; remove.setAttribute("aria-label", `Delete ${task.title}`);
+            const details = document.createElement("div"); details.className = "task-details min-w-0 flex-1 break-words";
+            const label = document.createElement("label"); label.className = "cursor-pointer"; label.htmlFor = check.id; label.textContent = task.title;
+            const meta = document.createElement("small"); meta.className = "mt-1 block text-[.68rem] text-[#9298a6]"; meta.textContent = deadline(task); details.append(label, meta);
+            const remove = document.createElement("button"); remove.type = "button"; remove.className = "delete-task min-h-8 border-0 bg-transparent p-1 text-[.68rem] text-[#a26670]"; remove.textContent = "Delete"; remove.setAttribute("aria-label", `Delete ${task.title}`);
             remove.addEventListener("click", () => { if (save(readTasks().filter(t => t.id !== task.id))) $("#task-status").textContent = "Task deleted."; render(); $("#task-input").focus(); });
             row.append(check, details, remove); list.append(row);
         });
