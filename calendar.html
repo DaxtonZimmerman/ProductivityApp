@@ -8,17 +8,29 @@
 </head>
 <body class="min-h-screen bg-slate-100 text-slate-900">
     <header class="border-b border-slate-200 bg-white">
-        <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+        <div class="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
             <a class="text-2xl font-bold tracking-tight" href="index.html">Student Productivity</a>
             <nav class="flex flex-wrap gap-4 text-sm font-medium text-slate-600" aria-label="Main navigation">
-                <a class="hover:text-indigo-600" href="index.html">Workspace</a>
-                <a class="hover:text-indigo-600" href="index.html#tasks">Tasks</a>
-                <a class="hover:text-indigo-600" href="Focus.html">Focus</a>
+                <a class="text-slate-600 hover:text-indigo-600" href="index.html">Workspace</a>
+                <a class="text-slate-600 hover:text-indigo-600" href="tasks.html">Tasks</a>
+                <a class="text-slate-600 hover:text-indigo-600" href="Focus.html">Focus</a>
                 <a class="text-indigo-600" href="calendar.html">Calendar</a>
+                <a class="text-slate-600 hover:text-indigo-600" href="notes.html">Notes</a>
             </nav>
+            <div class="relative">
+                <button class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" id="profile-button" type="button" aria-expanded="false" aria-controls="profile-menu" aria-label="Open profile menu">
+                    <span aria-hidden="true">👤</span>
+                </button>
+                <div class="absolute right-0 z-10 mt-2 hidden w-56 rounded-xl bg-white p-2 shadow-lg ring-1 ring-slate-200" id="profile-menu">
+                    <p class="hidden border-b border-slate-100 px-3 py-2 text-sm text-slate-600" id="user-name"></p>
+                    <button class="w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-indigo-600 hover:bg-indigo-50" id="google-sign-in" type="button">Sign in with Google</button>
+                    <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100" href="#about">About</a>
+                    <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100" href="#settings">Settings</a>
+                    <button class="hidden w-full rounded-lg px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100" id="google-sign-out" type="button">Sign out</button>
+                </div>
+            </div>
         </div>
     </header>
-
     <main class="mx-auto max-w-6xl px-6 py-10">
         <section class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -97,6 +109,7 @@
         let displayedMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
         let calendarEvents = [];
         let accessToken = localStorage.getItem(accessTokenKey);
+        const calendarStorageKey = "student-productivity-calendar-events";
 
         function showError(message) {
             status.textContent = message;
@@ -104,8 +117,25 @@
         }
 
         function updateConnectionView(connected) {
-            calendarPanel.classList.toggle("hidden", !connected);
+            const hasLocalTasks = getLocalTaskEvents().length > 0;
+            calendarPanel.classList.toggle("hidden", !connected && !hasLocalTasks);
             connectButton.classList.toggle("hidden", connected);
+        }
+
+        function getLocalTaskEvents() {
+            try {
+                const tasks = JSON.parse(localStorage.getItem("student-productivity-tasks") || "[]");
+                return tasks.filter((task) => task.date && task.time).map((task) => ({
+                    id: `local-${task.id}`,
+                    taskId: task.id,
+                    summary: task.title,
+                    start: { dateTime: new Date(`${task.date}T${task.time}`).toISOString() },
+                    localTask: true,
+                    completed: task.completed
+                }));
+            } catch {
+                return [];
+            }
         }
 
         function formatEventDate(event) {
@@ -155,9 +185,10 @@
 
                 calendarEvents.filter((event) => eventDateKey(event) === key).forEach((event) => {
                     const chip = document.createElement("div");
-                    chip.className = "mb-1 truncate rounded bg-indigo-100 px-2 py-1 text-left text-xs font-medium text-indigo-800";
+                    chip.className = `mb-1 truncate rounded px-2 py-1 text-left text-xs font-medium ${event.localTask ? "bg-emerald-100 text-emerald-800" : "bg-indigo-100 text-indigo-800"}`;
                     chip.textContent = event.summary || "Untitled event";
                     chip.title = formatEventDate(event);
+                    makeEventDraggable(chip, event);
                     cell.append(chip);
                 });
                 calendarGrid.append(cell);
@@ -181,10 +212,29 @@
                 title.textContent = event.summary || "Untitled event";
                 const date = document.createElement("p");
                 date.className = "mt-1 text-sm text-slate-500";
-                date.textContent = formatEventDate(event);
+                date.textContent = `${event.localTask ? "Task · " : ""}${formatEventDate(event)}`;
+                makeEventDraggable(item, event);
                 item.append(title, date);
                 eventList.append(item);
             });
+        }
+
+        function makeEventDraggable(element, event) {
+            element.draggable = true;
+            element.classList.add("cursor-grab");
+            element.addEventListener("dragstart", (dragEvent) => {
+                dragEvent.dataTransfer.effectAllowed = "copy";
+                dragEvent.dataTransfer.setData("application/x-productivity-calendar-event", JSON.stringify(event));
+                dragEvent.dataTransfer.setData("text/plain", event.summary || "Calendar event");
+                element.classList.add("opacity-50");
+            });
+            element.addEventListener("dragend", () => element.classList.remove("opacity-50"));
+        }
+
+        function publishCalendarEvents(events) {
+            const uniqueEvents = [...new Map(events.map((event) => [event.id || `${event.summary}-${event.start?.dateTime || event.start?.date}`, event])).values()];
+            localStorage.setItem(calendarStorageKey, JSON.stringify(uniqueEvents));
+            window.dispatchEvent(new CustomEvent("calendar-events-updated", { detail: uniqueEvents }));
         }
 
         async function calendarRequest(path, options = {}) {
@@ -207,9 +257,22 @@
             const end = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() + 1, 1);
             const params = new URLSearchParams({ maxResults: "250", orderBy: "startTime", singleEvents: "true", timeMin: start.toISOString(), timeMax: end.toISOString() });
             const data = await calendarRequest(`/calendars/primary/events?${params}`);
-            calendarEvents = data.items || [];
+            calendarEvents = [...(data.items || []), ...getLocalTaskEvents()];
+            publishCalendarEvents(calendarEvents);
             renderCalendar();
             renderEvents(calendarEvents);
+        }
+
+        function renderLocalCalendar() {
+            if (accessToken) {
+                loadEvents().catch((error) => showError(error.message));
+                return;
+            }
+            calendarEvents = getLocalTaskEvents();
+            publishCalendarEvents(calendarEvents);
+            renderCalendar();
+            renderEvents(calendarEvents);
+            updateConnectionView(Boolean(accessToken));
         }
 
         connectButton.addEventListener("click", async () => {
@@ -265,6 +328,10 @@
         });
 
         setPersistence(auth, browserLocalPersistence).catch((error) => showError(error.message));
+
+        window.addEventListener("storage", renderLocalCalendar);
+        window.addEventListener("tasks-updated", renderLocalCalendar);
+        renderLocalCalendar();
 
         onAuthStateChanged(auth, async (user) => {
             const connected = Boolean(user && accessToken);

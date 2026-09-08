@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tasks.js" defer></script>
+</head>
+<body class="min-h-screen bg-slate-100 text-slate-900">
+    <header class="border-b border-slate-200 bg-white">
+        <div class="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+            <a class="text-2xl font-bold tracking-tight" href="index.html">Student Productivity</a>
+            <nav class="flex flex-wrap gap-4 text-sm font-medium text-slate-600" aria-label="Main navigation">
+                <a class="text-slate-600 hover:text-indigo-600" href="index.html">Workspace</a>
+                <a class="text-slate-600 hover:text-indigo-600" href="tasks.html">Tasks</a>
+                <a class="text-slate-600 hover:text-indigo-600" href="calendar.html">Calendar</a>
+                <a class="text-slate-600 hover:text-indigo-600" href="notes.html">Notes</a>
+            </nav>
+            <div class="relative">
+                <button class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" id="profile-button" type="button" aria-expanded="false" aria-controls="profile-menu" aria-label="Open profile menu">
+                    <span aria-hidden="true">👤</span>
+                </button>
+                <div class="absolute right-0 z-10 mt-2 hidden w-56 rounded-xl bg-white p-2 shadow-lg ring-1 ring-slate-200" id="profile-menu">
+                    <p class="hidden border-b border-slate-100 px-3 py-2 text-sm text-slate-600" id="user-name"></p>
+                    <button class="w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-indigo-600 hover:bg-indigo-50" id="google-sign-in" type="button">Sign in with Google</button>
+                    <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100" href="#about">About</a>
+                    <a class="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100" href="#settings">Settings</a>
+                    <button class="hidden w-full rounded-lg px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100" id="google-sign-out" type="button">Sign out</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="mx-auto max-w-6xl px-6 py-10">
+        <div class="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-indigo-600">Plan your day</p>
+                <h1 class="mt-2 text-3xl font-bold tracking-tight">Tasks</h1>
+                <p class="mt-2 text-slate-600">Add a deadline to place a task in your calendar automatically.</p>
+            </div>
+            <a class="text-sm font-semibold text-indigo-600 hover:text-indigo-800" href="calendar.html">Open calendar →</a>
+        </div>
+
+        <div class="grid gap-6 lg:grid-cols-3">
+            <section class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 lg:col-span-2" id="tasks">
+                <div class="flex items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-xl font-semibold">Your task list</h2>
+                        <p class="mt-1 text-sm text-slate-500">Drag any task chip into a note.</p>
+                    </div>
+                    <span class="rounded-full bg-indigo-50 px-3 py-1 text-sm font-semibold text-indigo-700" id="task-count">0 tasks</span>
+                </div>
+
+                <form id="task-form" class="mt-6 rounded-xl bg-slate-50 p-4" aria-label="Add a new task">
+                    <div class="grid gap-3 sm:grid-cols-[1fr_auto_auto]">
+                        <label class="text-sm font-medium text-slate-700 sm:col-span-3">Task name
+                            <input class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 font-normal outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" id="task-input" aria-label="New task" placeholder="e.g. Review biology notes" required>
+                        </label>
+                        <label class="text-sm font-medium text-slate-700">Date
+                            <input class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-normal outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" id="task-date" type="date">
+                        </label>
+                        <label class="text-sm font-medium text-slate-700">Time
+                            <input class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-normal outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200" id="task-time" type="time">
+                        </label>
+                        <button type="submit" class="self-end rounded-lg bg-indigo-600 px-5 py-2.5 font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Add task</button>
+                    </div>
+                    <p class="mt-3 hidden text-sm text-rose-600" id="task-error" role="alert"></p>
+                </form>
+
+                <div class="mt-6 flex flex-wrap gap-2 border-b border-slate-200 pb-4" role="tablist" aria-label="Task time of day">
+                    <button class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white" data-filter="all" role="tab" aria-selected="true" type="button">All tasks</button>
+                    <button class="rounded-lg px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-amber-50 hover:text-amber-800" data-filter="morning" role="tab" aria-selected="false" type="button">Morning</button>
+                    <button class="rounded-lg px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-sky-50 hover:text-sky-800" data-filter="afternoon" role="tab" aria-selected="false" type="button">Afternoon</button>
+                    <button class="rounded-lg px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-violet-50 hover:text-violet-800" data-filter="evening" role="tab" aria-selected="false" type="button">Evening</button>
+                </div>
+                <div class="mt-5 space-y-3" id="task-list"></div>
+            </section>
+
+            <aside class="space-y-6">
+                <section class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+                    <h2 class="text-lg font-semibold">Progress</h2>
+                    <div class="mt-4 text-4xl font-bold text-indigo-600" id="progress">0%</div>
+                    <div class="mt-3 h-2 overflow-hidden rounded-full bg-slate-100"><div class="h-full rounded-full bg-indigo-600 transition-all" id="progress-bar" style="width: 0%"></div></div>
+                    <p class="mt-3 text-sm text-slate-500" id="progress-text">No tasks yet. Start small.</p>
+                </section>
+                <section class="rounded-2xl bg-slate-900 p-6 text-white shadow-sm">
+                    <h2 class="font-semibold">Keep your momentum</h2>
+                    <p class="mt-2 text-sm leading-6 text-slate-300">Tasks with a date and time appear in the calendar and can be dropped into any note.</p>
+                    <a class="mt-4 inline-block text-sm font-semibold text-indigo-300 hover:text-white" href="notes.html">Open notes →</a>
+                </section>
+            </aside>
+        </div>
+    </main>
+</body>
+</html>
